@@ -4,14 +4,14 @@
 
 #include "TextSlide.h"
 
-TextSlide::TextSlide( String *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd ) : textToDisplay(
-        textToDisplay ), effect( effect ), delayAtEnd( delayAtEnd ) {}
+TextSlide::TextSlide( char *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd )
+        : textToDisplay( textToDisplay ), effect( effect ), delayAtEnd( delayAtEnd ) {}
 
 TextSlide::~TextSlide() {
-    delete getText();
+    //delete getText();
 }
 
-String *TextSlide::getText() {
+char *TextSlide::getText() {
     return textToDisplay;
 }
 

@@ -29,17 +29,12 @@ void Orchestrator::updateDisplay() {
         Serial.println( newSlideAreAvailable() );
         
         if ( newSlideAreAvailable() ) {
-            
-            prevTextSlide = currentTextSlide;
-            delete prevTextSlide;
-            currentTextSlide = getNextSlide();
-            
-            currentTextSlide->getText()->toCharArray( curMessage, currentTextSlide->getText()->length() + 1 );
+            updateCurrentSlide();
             
             Serial.print( "Message: " );
-            Serial.println( curMessage );
-            
-            matrix.displayText( curMessage,
+            Serial.println( currentTextSlide->getText() );
+    
+            matrix.displayText( currentTextSlide->getText(),
                                 DEFAULT_SCROLL_ALIGN,
                                 DEFAULT_SCROLL_SPEED,
                                 currentTextSlide->getDelayAtEnd(),
@@ -47,19 +42,8 @@ void Orchestrator::updateDisplay() {
                                 currentTextSlide->getEffect() );
             
             Serial.println( "======================" );
-            
-        } else {
-            Serial.println( "Reset" );
-            resetQueue();
-            Serial.println( "======================" );
         }
     }
-}
-
-void Orchestrator::resetQueue() {
-    clearQueue();
-    addInQueue( new TextSlide( new String( "Norway is comming soon !" ), PA_SCROLL_LEFT, 0 ) );
-    addInQueue( new TextSlide( new String( "\\o/" ), PA_DISSOLVE, 2000 ) );
 }
 
 // -------------------------------------
@@ -89,8 +73,13 @@ bool Orchestrator::newSlideAreAvailable() {
     return queue.count() > 0;
 }
 
-TextSlide *Orchestrator::getNextSlide() {
-    return queue.pop();
+void Orchestrator::updateCurrentSlide() {
+    if ( currentTextSlide != nullptr ) {
+        prevTextSlide = currentTextSlide;
+        delete prevTextSlide;
+    }
+    
+    currentTextSlide = queue.pop();
 }
 
 // -------------------------------------

@@ -9,18 +9,18 @@
 
 class TextSlide {
 public:
-    TextSlide( String *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd );
+    TextSlide( char *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd );
     
     ~TextSlide();
     
-    String *getText();
+    char *getText();
     
     textEffect_t getEffect();
     
     uint16_t getDelayAtEnd();
 
 protected:
-    String       *textToDisplay = nullptr;
+    char         *textToDisplay = nullptr;
     textEffect_t effect         = PA_SCROLL_LEFT;
     uint16_t     delayAtEnd     = 0;
 };

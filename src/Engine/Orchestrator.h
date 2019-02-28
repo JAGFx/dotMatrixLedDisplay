@@ -30,8 +30,6 @@ public:
     void begin();
     
     void updateDisplay();
-    
-    void resetQueue();
     // ----
     
     // Project configuration
@@ -44,7 +42,7 @@ public:
     
     bool newSlideAreAvailable();
     
-    TextSlide *getNextSlide();
+    void updateCurrentSlide();
     // ----
 
 
