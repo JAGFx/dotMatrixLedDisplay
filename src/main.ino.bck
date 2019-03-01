@@ -20,13 +20,13 @@ uint8_t DEFAULT_SCROLL_SPEED = 35;    // default
 textPosition_t DEFAULT_SCROLL_ALIGN = PA_CENTER;
 
 Orchestrator orchestrator;
-TextSlide *currentTextSlide;
-TextSlide *prevTextSlide;
+MessageItem *currentMessageItem;
+MessageItem *prevTextSlide;
 
 void resetQueue() {
     orchestrator.clearQueue();
-    orchestrator.addInQueue( new TextSlide( new String( "Norway is comming soon !" ), PA_SCROLL_LEFT, 0 ));
-    orchestrator.addInQueue( new TextSlide( new String( "\\o/" ), PA_DISSOLVE, 2000 ));
+    orchestrator.addInQueue( new MessageItem( new String( "Norway is comming soon !" ), PA_SCROLL_LEFT, 0 ));
+    orchestrator.addInQueue( new MessageItem( new String( "\\o/" ), PA_DISSOLVE, 2000 ));
 }
 
 void setup() {
@@ -45,18 +45,18 @@ void loop() {
         Serial.print( "Is available ?" );
         Serial.println( orchestrator.newSlideAreAvailable());
         
-        if ( orchestrator.newSlideAreAvailable()) {
-            prevTextSlide = currentTextSlide;
+        if ( orchestrator.needToRefresh()) {
+            prevTextSlide = currentMessageItem;
             delete prevTextSlide;
-            currentTextSlide = orchestrator.getNextSlide();
-            currentTextSlide->getText()->toCharArray( curMessage, currentTextSlide->getText()->length() + 1 );
+            currentMessageItem = orchestrator.getNextSlide();
+            currentMessageItem->getText()->toCharArray( curMessage, currentMessageItem->getText()->length() + 1 );
             Serial.print( "Message: " );
             Serial.println( curMessage );
             Serial.println( "======================" );
             
-            //strcpy( curMessage, currentTextSlide.c_str() );
-            P.displayText( curMessage, DEFAULT_SCROLL_ALIGN, DEFAULT_SCROLL_SPEED, currentTextSlide->getDelayAtEnd(),
-                           currentTextSlide->getEffect(), currentTextSlide->getEffectIn());
+            //strcpy( curMessage, currentMessageItem.c_str() );
+            P.displayText( curMessage, DEFAULT_SCROLL_ALIGN, DEFAULT_SCROLL_SPEED, currentMessageItem->getDelayAtEnd(),
+                           currentMessageItem->getEffect(), currentMessageItem->getEffectIn());
         } else {
             Serial.println( "Reset" );
             resetQueue();

@@ -25,24 +25,8 @@ void Orchestrator::begin() {
 
 void Orchestrator::updateDisplay() {
     if ( matrix.displayAnimate() ) {
-        Serial.print( "Is available ?" );
-        Serial.println( newSlideAreAvailable() );
-        
-        if ( newSlideAreAvailable() ) {
-            updateCurrentSlide();
-            
-            Serial.print( "Message: " );
-            Serial.println( currentTextSlide->getText() );
-    
-            matrix.displayText( currentTextSlide->getText(),
-                                DEFAULT_SCROLL_ALIGN,
-                                DEFAULT_SCROLL_SPEED,
-                                currentTextSlide->getDelayAtEnd(),
-                                currentTextSlide->getEffectIn(),
-                                currentTextSlide->getEffectOut() );
-            
-            Serial.println( "======================" );
-        }
+        Serial.println( "Plop" );
+        currentMod->updateDisplay( matrix );
     }
 }
 
@@ -50,36 +34,15 @@ void Orchestrator::updateDisplay() {
 
 
 // -------------------------------------
-// -- Project configuration
+// -- Mod management
 
-// -------------------------------------
-
-
-
-// -------------------------------------
-// -- Project management
-
-void Orchestrator::addInQueue( TextSlide *textSlide ) {
-    queue.push( textSlide );
+IMod *Orchestrator::getCurrentMod() {
+    return currentMod;
 }
 
-void Orchestrator::clearQueue() {
-    queue.clear();
-}
-
-bool Orchestrator::newSlideAreAvailable() {
-    // Serial.println(queue.count());
-    
-    return queue.count() > 0;
-}
-
-void Orchestrator::updateCurrentSlide() {
-    if ( currentTextSlide != nullptr ) {
-        prevTextSlide = currentTextSlide;
-        delete prevTextSlide;
-    }
-    
-    currentTextSlide = queue.pop();
+void Orchestrator::setCurrentMod( IMod *currentMod ) {
+    Orchestrator::currentMod = currentMod;
 }
 
 // -------------------------------------
+

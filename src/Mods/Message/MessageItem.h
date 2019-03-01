@@ -7,14 +7,15 @@
 
 #include <MD_Parola.h>
 
-class TextSlide {
+
+class MessageItem {
 public:
-    TextSlide( char *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd );
+    MessageItem( char *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd );
     
-    TextSlide( char *textToDisplay, const textEffect_t &effectIn, const textEffect_t &effectOut,
-               const uint16_t &delayAtEnd );
+    MessageItem( char *textToDisplay, const textEffect_t &effectIn, const textEffect_t &effectOut,
+                 const uint16_t &delayAtEnd );
     
-    ~TextSlide();
+    ~MessageItem();
     
     char *getText();
     
