@@ -1,5 +1,8 @@
 //
-// Created by emsm on 24-Feb-19.
+// @author: SMITH Emmanuel <hey@emmanuel-smith.me>
+// @site: https://emmanuel-smith.me
+// Date: 24-Feb-19
+// Time: 02:57 PM
 //
 
 #ifndef DISPLAYTEXTDOTMATRIX_TEXTSLIDE_H

@@ -1,3 +1,10 @@
+//
+// @author: SMITH Emmanuel <hey@emmanuel-smith.me>
+// @site: https://emmanuel-smith.me
+// Date: 24-Feb-19
+// Time: 02:57 PM
+//
+
 #include <MD_Parola.h>
 #include "QueueH.h"
 #include "Engine/Orchestrator.h"

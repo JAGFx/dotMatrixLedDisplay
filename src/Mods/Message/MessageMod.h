@@ -1,5 +1,8 @@
 //
-// Created by emsm on 01-Mar-19.
+// @author: SMITH Emmanuel <hey@emmanuel-smith.me>
+// @site: https://emmanuel-smith.me
+// Date: 01-Mar-19
+// Time: 08:53 PM
 //
 
 #ifndef DOTMATRIXLEDDISPLAY_MESSAGEMOD_H
