@@ -38,8 +38,8 @@ void Orchestrator::updateDisplay() {
                                 DEFAULT_SCROLL_ALIGN,
                                 DEFAULT_SCROLL_SPEED,
                                 currentTextSlide->getDelayAtEnd(),
-                                currentTextSlide->getEffect(),
-                                currentTextSlide->getEffect() );
+                                currentTextSlide->getEffectIn(),
+                                currentTextSlide->getEffectOut() );
             
             Serial.println( "======================" );
         }

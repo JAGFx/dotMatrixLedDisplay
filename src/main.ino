@@ -12,11 +12,9 @@ Orchestrator orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_P
 
 void resetQueue() {
     orchestrator.clearQueue();
-    orchestrator.addInQueue( new TextSlide( "Norway is comming soon !", PA_SCROLL_LEFT, 0 ) );
+    orchestrator.addInQueue( new TextSlide( "Norway is coming soon !", PA_SCROLL_LEFT, 0 ) );
     orchestrator.addInQueue( new TextSlide( "\\o/", PA_DISSOLVE, 2000 ) );
-    orchestrator.addInQueue( new TextSlide( "\\o/", PA_DISSOLVE, 2000 ) );
-    // TODO Add text slide with distinct in and out effect
-    // Fixme add 2 textSlide if effect "PA_DISSOLVE" was selected
+    orchestrator.addInQueue( new TextSlide( "\\o/", PA_DISSOLVE, PA_FADE, 2000 ) );
 }
 
 void setup() {

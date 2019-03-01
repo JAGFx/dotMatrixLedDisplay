@@ -56,7 +56,7 @@ void loop() {
             
             //strcpy( curMessage, currentTextSlide.c_str() );
             P.displayText( curMessage, DEFAULT_SCROLL_ALIGN, DEFAULT_SCROLL_SPEED, currentTextSlide->getDelayAtEnd(),
-                           currentTextSlide->getEffect(), currentTextSlide->getEffect());
+                           currentTextSlide->getEffect(), currentTextSlide->getEffectIn());
         } else {
             Serial.println( "Reset" );
             resetQueue();

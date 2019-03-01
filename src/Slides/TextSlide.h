@@ -11,17 +11,23 @@ class TextSlide {
 public:
     TextSlide( char *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd );
     
+    TextSlide( char *textToDisplay, const textEffect_t &effectIn, const textEffect_t &effectOut,
+               const uint16_t &delayAtEnd );
+    
     ~TextSlide();
     
     char *getText();
     
-    textEffect_t getEffect();
+    textEffect_t getEffectIn();
+    
+    textEffect_t getEffectOut();
     
     uint16_t getDelayAtEnd();
 
 protected:
     char         *textToDisplay = nullptr;
-    textEffect_t effect         = PA_SCROLL_LEFT;
+    textEffect_t effectIn       = PA_SCROLL_LEFT;
+    textEffect_t effectOut      = PA_SCROLL_LEFT;
     uint16_t     delayAtEnd     = 0;
 };
 
