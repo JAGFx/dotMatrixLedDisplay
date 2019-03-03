@@ -29,7 +29,8 @@ void Orchestrator::begin() {
 void Orchestrator::updateDisplay() {
     if ( matrix.displayAnimate() ) {
         Serial.println( "Plop" );
-        currentMod->updateDisplay( matrix );
+        currentMod->updateDisplay( &matrix );
+        matrix.displayReset();
     }
 }
 

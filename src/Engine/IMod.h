@@ -13,10 +13,11 @@
 class IMod {
 public:
     enum ModeType {
-        MessageMod
+        MessageMod,
+        Graph
     };
     
-    virtual void updateDisplay( MD_Parola &matrix ) = 0;
+    virtual void updateDisplay( MD_Parola *matrix ) = 0;
     
     virtual bool needToRefresh() = 0;
     

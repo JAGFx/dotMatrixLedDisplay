@@ -10,6 +10,11 @@
 MessageItem::MessageItem( char *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd )
         : textToDisplay( textToDisplay ), effectIn( effect ), effectOut( effect ), delayAtEnd( delayAtEnd ) {}
 
+MessageItem::MessageItem( char *textToDisplay, const textEffect_t &effect, const uint16_t &delayAtEnd,
+                          const SPRITES &sprite )
+        : textToDisplay( textToDisplay ), effectIn( effect ), effectOut( effect ), delayAtEnd( delayAtEnd ),
+          sprite( sprite ) {}
+
 MessageItem::MessageItem( char *textToDisplay, const textEffect_t &effectIn, const textEffect_t &effectOut,
                           const uint16_t &delayAtEnd )
         : textToDisplay( textToDisplay ), effectIn( effectIn ), effectOut( effectOut ), delayAtEnd( delayAtEnd ) {}
@@ -22,14 +27,18 @@ char *MessageItem::getText() {
     return textToDisplay;
 }
 
-textEffect_t MessageItem::getEffectIn() {
+textEffect_t MessageItem::getEffectIn() const {
     return effectIn;
 }
 
-textEffect_t MessageItem::getEffectOut() {
+textEffect_t MessageItem::getEffectOut() const {
     return effectOut;
 }
 
-uint16_t MessageItem::getDelayAtEnd() {
+uint16_t MessageItem::getDelayAtEnd() const {
     return delayAtEnd;
+}
+
+MessageItem::SPRITES MessageItem::getSprite() const {
+    return sprite;
 }

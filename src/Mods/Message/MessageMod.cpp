@@ -7,6 +7,7 @@
 
 #include "MessageMod.h"
 #include "../../Engine/Orchestrator.h"
+#include "MessageSprites.h"
 
 MessageMod::MessageMod() = default;
 
@@ -42,7 +43,7 @@ bool MessageMod::needToRefresh() {
     return queue.count() > 0;
 }
 
-void MessageMod::updateDisplay( MD_Parola &matrix ) {
+void MessageMod::updateDisplay( MD_Parola *matrix ) {
     Serial.print( "Is available ?" );
     Serial.println( needToRefresh() );
     
@@ -51,13 +52,35 @@ void MessageMod::updateDisplay( MD_Parola &matrix ) {
         
         Serial.print( "Message: " );
         Serial.println( currentMessageItem->getText() );
-        
-        matrix.displayText( currentMessageItem->getText(),
-                            Orchestrator::DEFAULT_SCROLL_ALIGN,
-                            Orchestrator::DEFAULT_SCROLL_SPEED,
-                            currentMessageItem->getDelayAtEnd(),
-                            currentMessageItem->getEffectIn(),
-                            currentMessageItem->getEffectOut() );
+    
+        matrix->displayText( currentMessageItem->getText(),
+                             Orchestrator::DEFAULT_SCROLL_ALIGN,
+                             Orchestrator::DEFAULT_SCROLL_SPEED,
+                             currentMessageItem->getDelayAtEnd(),
+                             currentMessageItem->getEffectIn(),
+                             currentMessageItem->getEffectOut() );
+    
+        /*if ( currentMessageItem->getEffectIn() == PA_SPRITE ) {
+            Serial.println( "SPRIIIIIIIIITE !!!" );
+            
+            const uint8_t PROGMEM rocket[] = {
+                    0x18, 0x3c, 0x66, 0xc3, 0x99, 0x3c, 0x66, 0xc3, 0x81,
+            };
+            
+            matrix->setSpriteData( rocket,
+                                   Chevron::widthFrameByte,
+                                   Chevron::numberOfFrame,
+                                   rocket,
+                                   Chevron::widthFrameByte,
+                                   Chevron::numberOfFrame );
+            
+            *//*matrix->setSpriteData( Chevron::spriteData,
+                                  Chevron::widthFrameByte,
+                                  Chevron::numberOfFrame,
+                                  Chevron::spriteData,
+                                  Chevron::widthFrameByte,
+                                  Chevron::numberOfFrame );*//*
+        }*/
         
         Serial.println( "======================" );
     }

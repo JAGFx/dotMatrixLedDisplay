@@ -26,6 +26,10 @@ void resetQueue() {
         messageMod->addInQueue( new MessageItem( "Norway is coming soon !", PA_SCROLL_LEFT, 0 ) );
         messageMod->addInQueue( new MessageItem( "\\o/", PA_DISSOLVE, 2000 ) );
         messageMod->addInQueue( new MessageItem( "\\o/", PA_DISSOLVE, PA_FADE, 2000 ) );
+        // --- FIXME Sprite do not draw correctly
+        //messageMod->addInQueue( new MessageItem( "tchou", PA_SPRITE, 2000, MessageItem::SPRITES::CHEVRON ) );
+        // ---
+        messageMod->addInQueue( new MessageItem( "Hellow", PA_MESH, 2000 ) );
     }
 }
 

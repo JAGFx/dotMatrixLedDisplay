@@ -30,7 +30,7 @@ public:
     // IMod
     virtual bool needToRefresh();
     
-    virtual void updateDisplay( MD_Parola &matrix );
+    virtual void updateDisplay( MD_Parola *matrix );
     
     virtual bool instanceOfMod( ModeType type );
     // ----
