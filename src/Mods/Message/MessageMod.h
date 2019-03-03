@@ -13,9 +13,10 @@
 #include <QueueH.h>
 
 class MessageMod : public IMod {
-    static const uint8_t MAX_SLIDE_IN_QUEUE = 10;
-
 public:
+
+    static const uint8_t MAX_SLIDE_IN_QUEUE = 10;
+    
     MessageMod();
     
     // Mod management
@@ -31,6 +32,10 @@ public:
     virtual bool needToRefresh();
     
     virtual void updateDisplay( MD_Parola *matrix );
+    
+    virtual void init( MD_Parola *matrix );
+    
+    virtual void reset( MD_Parola *matrix );
     
     virtual bool instanceOfMod( ModeType type );
     // ----

@@ -86,6 +86,14 @@ void MessageMod::updateDisplay( MD_Parola *matrix ) {
     }
 }
 
+void MessageMod::init( MD_Parola *matrix ) {
+
+}
+
+void MessageMod::reset( MD_Parola *matrix ) {
+
+}
+
 bool MessageMod::instanceOfMod( IMod::ModeType type ) {
     return type == IMod::ModeType::MessageMod;
 }

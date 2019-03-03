@@ -19,6 +19,10 @@ public:
     
     virtual void updateDisplay( MD_Parola *matrix ) = 0;
     
+    virtual void init( MD_Parola *matrix ) = 0;
+    
+    virtual void reset( MD_Parola *matrix ) = 0;
+    
     virtual bool needToRefresh() = 0;
     
     virtual bool instanceOfMod( ModeType ) = 0;

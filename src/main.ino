@@ -9,6 +9,7 @@
 #include "QueueH.h"
 #include "Engine/Orchestrator.h"
 #include "Mods/Message/MessageMod.h"
+#include "Mods/Graph/GraphMod.h"
 
 #define HARDWARE_TYPE MD_MAX72XX::ICSTATION_HW
 #define MAX_DEVICES 4
@@ -38,6 +39,8 @@ void setup() {
     orchestrator.begin();
     
     orchestrator.setCurrentMod( new MessageMod );
+    //orchestrator.setCurrentMod( new GraphMod );
+    orchestrator.initMod();
     
     resetQueue();
     
@@ -47,11 +50,19 @@ void setup() {
 
 void loop() {
     
-    if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod )
-         && !orchestrator.getCurrentMod()->needToRefresh() ) {
-        
+    if ( !orchestrator.getCurrentMod()->needToRefresh() ) {
         Serial.println( "Reset" );
-        resetQueue();
+        orchestrator.resetMod();
+        
+        if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
+            // -------------------------------------
+            // -- MessageMod
+            
+            resetQueue();
+            
+            // -------------------------------------
+        }
+        
         Serial.println( "======================" );
     }
     

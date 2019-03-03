@@ -31,6 +31,10 @@ public:
     void begin();
     
     void updateDisplay();
+    
+    void initMod();
+    
+    void resetMod();
     // ----
     
     // Mod management
@@ -38,7 +42,7 @@ public:
     
     void setCurrentMod( IMod *currentMod );
     // ----
-    
+
 protected:
     // Matrix
     MD_Parola matrix;

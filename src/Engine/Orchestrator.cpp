@@ -34,6 +34,14 @@ void Orchestrator::updateDisplay() {
     }
 }
 
+void Orchestrator::initMod() {
+    currentMod->init( &matrix );
+}
+
+void Orchestrator::resetMod() {
+    currentMod->reset( &matrix );
+}
+
 // -------------------------------------
 
 
