@@ -12,28 +12,53 @@
 #include "Mods/Graph/GraphMod.h"
 #include "Mods/Tracking/TrackingMod.h"
 
+// -------------------------------------------------
+// --- Switch activeMod
+
+#define SWITCH_MOD_MIN 25
+#define DEBOUNCE_DELAY_MS 250
+
+volatile IMod::ModeType activeMod  = IMod::ModeType::MessageMod;
+volatile bool           changedMod = false;
+volatile unsigned long  lastMillis = 0;
+
+portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+
+void IRAM_ATTR
+
+handleSwitchMod() {
+    portENTER_CRITICAL_ISR( &mux );
+    unsigned long currentMillis = millis();
+    
+    if ( currentMillis - lastMillis >= DEBOUNCE_DELAY_MS ) {
+        activeMod  = static_cast<IMod::ModeType>(( activeMod + 1 ) % IMod::ModeType::NumOfMod);
+        changedMod = true;
+        lastMillis = currentMillis;
+        
+        // FIXME Crash when you change th current mod from "Tracking"
+        
+        /*Serial.println( "################## SWITCH MOD !!!" );
+        Serial.println( activeMod );
+        Serial.println( "################## activeMod" );*/
+    }
+    
+    portEXIT_CRITICAL_ISR( &mux );
+}
+
+// --- ./Switch activeMod
+// -------------------------------------------------
+
 #define HARDWARE_TYPE MD_MAX72XX::ICSTATION_HW
 #define MAX_DEVICES 4
 #define CLK_PIN   14
 #define DATA_PIN  12
 #define CS_PIN    15
 
-// --- Switch activeMod
-#define SWITCH_MOD_MIN 25
-#define DEBOUNCE_DELAY_MS 250
-// --- ./Switch activeMod
-
 Orchestrator orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
 
-// --- Switch activeMod
-volatile IMod::ModeType activeMod  = IMod::ModeType::Tracking;
-volatile bool           changedMod = false;
-volatile unsigned long  lastMillis = 0;
-
-portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
-// --- ./Switch activeMod
-
 void resetData() {
+    orchestrator.resetMod();
+    
     if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
         //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message mode reset queue" );
         MessageMod *messageMod = ( MessageMod * ) orchestrator.getCurrentMod();
@@ -46,11 +71,6 @@ void resetData() {
         //messageMod->addInQueue( new MessageItem( "tchou", PA_SPRITE, 2000, MessageItem::SPRITES::CHEVRON ) );
         // ---
         messageMod->addInQueue( new MessageItem( "Hellow", PA_MESH, 2000 ) );
-    
-    } else if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
-        //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Graph mode reset queue" );
-        //GraphMod *graphMod = ( GraphMod * ) orchestrator.getCurrentMod();
-        orchestrator.resetMod();
     
     } else if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::Tracking ) ) {
         //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Graph mode reset queue" );
@@ -66,25 +86,6 @@ void resetData() {
     }
 }
 
-void IRAM_ATTR
-
-handleSwitchMod() {
-    portENTER_CRITICAL_ISR( &mux );
-    unsigned long currentMillis = millis();
-    
-    if ( currentMillis - lastMillis >= DEBOUNCE_DELAY_MS ) {
-        activeMod  = static_cast<IMod::ModeType>(( activeMod + 1 ) % IMod::ModeType::NumOfMod);
-        changedMod = true;
-        lastMillis = currentMillis;
-        
-        /*Serial.println( "################## SWITCH MOD !!!" );
-        Serial.println( activeMod );
-        Serial.println( "################## activeMod" );*/
-    }
-    
-    portEXIT_CRITICAL_ISR( &mux );
-}
-
 void initOrchestrator() {
     delete orchestrator.getCurrentMod();
     orchestrator.setCurrentMod( nullptr );
@@ -92,7 +93,6 @@ void initOrchestrator() {
     switch ( activeMod ) {
         case IMod::ModeType::MessageMod:
             orchestrator.setCurrentMod( new MessageMod );
-            resetData();
             //Serial.println( ">>> MESSAGE MOD" );
             break;
     
@@ -103,7 +103,6 @@ void initOrchestrator() {
     
         case IMod::ModeType::Tracking:
             orchestrator.setCurrentMod( new TrackingMod );
-            resetData();
             //Serial.println( ">>> TRACKING MOD" );
             break;
     }
@@ -135,23 +134,7 @@ void loop() {
         if ( !orchestrator.getCurrentMod()->needToRefresh() ) {
             //Serial.println( "Reset" );
             orchestrator.resetMod();
-            
-            if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
-                // -------------------------------------
-                // -- MessageMod
-    
-                resetData();
-                
-                // -------------------------------------
-            } else if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::Tracking ) ) {
-                // -------------------------------------
-                // -- MessageMod
-    
-                resetData();
-    
-                // -------------------------------------
-            }
-    
+            resetData();
             //Serial.println( "======================" );
         }
         
