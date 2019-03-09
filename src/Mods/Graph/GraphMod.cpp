@@ -118,3 +118,7 @@ bool GraphMod::instanceOfMod( IMod::ModeType type ) {
 }
 
 // -------------------------------------
+
+const uint8_t GraphMod::getOriginalColumnCount() {
+    return originalColumnCount;
+}
