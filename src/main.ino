@@ -10,6 +10,7 @@
 #include "Engine/Orchestrator.h"
 #include "Mods/Message/MessageMod.h"
 #include "Mods/Graph/GraphMod.h"
+#include "Mods/Tracking/TrackingMod.h"
 
 #define HARDWARE_TYPE MD_MAX72XX::ICSTATION_HW
 #define MAX_DEVICES 4
@@ -17,26 +18,22 @@
 #define DATA_PIN  12
 #define CS_PIN    15
 
+// --- Switch activeMod
 #define SWITCH_MOD_MIN 25
-
 #define DEBOUNCE_DELAY_MS 250
+// --- ./Switch activeMod
 
-Orchestrator           orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
+Orchestrator orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
 
 // --- Switch activeMod
-enum AVAILABLE_MOD {
-    MESSAGE_MOD,
-    GRAPH_MOD,
-    NUM_OF_MOD
-};
-volatile AVAILABLE_MOD activeMod    = MESSAGE_MOD;
-volatile bool          changedMod   = false;
-volatile unsigned long lastMillis   = 0;
+volatile IMod::ModeType activeMod  = IMod::ModeType::Tracking;
+volatile bool           changedMod = false;
+volatile unsigned long  lastMillis = 0;
 
 portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 // --- ./Switch activeMod
 
-void resetQueue() {
+void resetData() {
     if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
         //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message mode reset queue" );
         MessageMod *messageMod = ( MessageMod * ) orchestrator.getCurrentMod();
@@ -54,6 +51,18 @@ void resetQueue() {
         //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Graph mode reset queue" );
         //GraphMod *graphMod = ( GraphMod * ) orchestrator.getCurrentMod();
         orchestrator.resetMod();
+    
+    } else if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::Tracking ) ) {
+        //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Graph mode reset queue" );
+        TrackingMod *trackingMod = ( TrackingMod * ) orchestrator.getCurrentMod();
+        const char  *gpsStream   =
+                            "$GPRMC,045103.000,A,3014.1984,N,09749.2872,W,0.67,161.46,030913,,,A*7C\r\n"
+                            "$GPGGA,045104.000,3014.1985,N,09749.2873,W,1,09,1.2,211.6,M,-22.5,M,,0000*62\r\n"
+                            "$GPRMC,045200.000,A,3014.3820,N,09748.9514,W,36.88,65.02,030913,,,A*77\r\n"
+                            "$GPGGA,045201.000,3014.3864,N,09748.9411,W,1,10,1.2,200.8,M,-22.5,M,,0000*6C\r\n"
+                            "$GPRMC,045251.000,A,3014.4275,N,09749.0626,W,0.51,217.94,030913,,,A*7D\r\n"
+                            "$GPGGA,045252.000,3014.4273,N,09749.0628,W,1,09,1.3,206.9,M,-22.5,M,,0000*6F\r\n";
+        trackingMod->updateRawData( gpsStream );
     }
 }
 
@@ -64,7 +73,7 @@ handleSwitchMod() {
     unsigned long currentMillis = millis();
     
     if ( currentMillis - lastMillis >= DEBOUNCE_DELAY_MS ) {
-        activeMod  = static_cast<AVAILABLE_MOD>(( activeMod + 1 ) % NUM_OF_MOD);
+        activeMod  = static_cast<IMod::ModeType>(( activeMod + 1 ) % IMod::ModeType::NumOfMod);
         changedMod = true;
         lastMillis = currentMillis;
         
@@ -81,20 +90,26 @@ void initOrchestrator() {
     orchestrator.setCurrentMod( nullptr );
     
     switch ( activeMod ) {
-        case MESSAGE_MOD:
+        case IMod::ModeType::MessageMod:
             orchestrator.setCurrentMod( new MessageMod );
-            resetQueue();
+            resetData();
             //Serial.println( ">>> MESSAGE MOD" );
             break;
-        
-        case GRAPH_MOD:
+    
+        case IMod::ModeType::Graph:
             orchestrator.setCurrentMod( new GraphMod );
             //Serial.println( ">>> GRAPH MOD" );
+            break;
+    
+        case IMod::ModeType::Tracking:
+            orchestrator.setCurrentMod( new TrackingMod );
+            resetData();
+            //Serial.println( ">>> TRACKING MOD" );
             break;
     }
     
     orchestrator.initMod();
-    resetQueue();
+    resetData();
     
     changedMod = false;
 }
@@ -124,9 +139,16 @@ void loop() {
             if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
                 // -------------------------------------
                 // -- MessageMod
+    
+                resetData();
                 
-                resetQueue();
-                
+                // -------------------------------------
+            } else if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::Tracking ) ) {
+                // -------------------------------------
+                // -- MessageMod
+    
+                resetData();
+    
                 // -------------------------------------
             }
     

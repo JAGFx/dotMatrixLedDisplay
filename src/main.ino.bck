@@ -59,7 +59,7 @@ void loop() {
                            currentMessageItem->getEffect(), currentMessageItem->getEffectIn());
         } else {
             Serial.println( "Reset" );
-            resetQueue();
+            resetData();
             Serial.println( "======================" );
         }
         

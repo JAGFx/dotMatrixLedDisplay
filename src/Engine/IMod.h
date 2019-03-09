@@ -14,7 +14,9 @@ class IMod {
 public:
     enum ModeType {
         MessageMod,
-        Graph
+        Graph,
+        Tracking,
+        NumOfMod
     };
     
     virtual void updateDisplay( MD_Parola *matrix ) = 0;
