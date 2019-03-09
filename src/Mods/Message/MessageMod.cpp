@@ -44,14 +44,14 @@ bool MessageMod::needToRefresh() {
 }
 
 void MessageMod::updateDisplay( MD_Parola *matrix ) {
-    Serial.print( "Is available ?" );
-    Serial.println( needToRefresh() );
+    /*Serial.print( "Is available ?" );
+    Serial.println( needToRefresh() );*/
     
     if ( needToRefresh() ) {
         updateCurrentMessageItem();
-        
-        Serial.print( "Message: " );
-        Serial.println( currentMessageItem->getText() );
+    
+        /*Serial.print( "Message: " );
+        Serial.println( currentMessageItem->getText() );*/
     
         matrix->displayText( currentMessageItem->getText(),
                              Orchestrator::DEFAULT_SCROLL_ALIGN,
@@ -81,8 +81,8 @@ void MessageMod::updateDisplay( MD_Parola *matrix ) {
                                   Chevron::widthFrameByte,
                                   Chevron::numberOfFrame );*//*
         }*/
-        
-        Serial.println( "======================" );
+    
+        //Serial.println( "======================" );
     }
 }
 

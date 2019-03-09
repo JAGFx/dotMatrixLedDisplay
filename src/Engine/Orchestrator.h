@@ -26,7 +26,7 @@ public:
                            uint8_t numDevices = DEFAULT_MIN_DISPLAY );
     
     // Matrix
-    MD_Parola getMatrix();
+    MD_Parola *getMatrix();
     
     void begin();
     

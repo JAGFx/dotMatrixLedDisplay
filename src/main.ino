@@ -19,17 +19,26 @@
 
 #define SWITCH_MOD_MIN 25
 
-Orchestrator orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
+#define DEBOUNCE_DELAY_MS 250
 
-// --- Switch mod
-volatile bool mod        = false;
-volatile bool changedMod = false;
+Orchestrator           orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
+
+// --- Switch activeMod
+enum AVAILABLE_MOD {
+    MESSAGE_MOD,
+    GRAPH_MOD,
+    NUM_OF_MOD
+};
+volatile AVAILABLE_MOD activeMod    = MESSAGE_MOD;
+volatile bool          changedMod   = false;
+volatile unsigned long lastMillis   = 0;
 
 portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
-// --- ./Switch mod
+// --- ./Switch activeMod
 
 void resetQueue() {
     if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
+        //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message mode reset queue" );
         MessageMod *messageMod = ( MessageMod * ) orchestrator.getCurrentMod();
         
         messageMod->clearQueue();
@@ -40,6 +49,11 @@ void resetQueue() {
         //messageMod->addInQueue( new MessageItem( "tchou", PA_SPRITE, 2000, MessageItem::SPRITES::CHEVRON ) );
         // ---
         messageMod->addInQueue( new MessageItem( "Hellow", PA_MESH, 2000 ) );
+    
+    } else if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
+        //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Graph mode reset queue" );
+        //GraphMod *graphMod = ( GraphMod * ) orchestrator.getCurrentMod();
+        orchestrator.resetMod();
     }
 }
 
@@ -47,67 +61,64 @@ void IRAM_ATTR
 
 handleSwitchMod() {
     portENTER_CRITICAL_ISR( &mux );
-    Serial.println( "################## SWITCH MOD !!!" );
-    Serial.println( mod );
-    Serial.println( "################## mod" );
-    /*delete orchestrator.getCurrentMod();
+    unsigned long currentMillis = millis();
     
-    
-    
-    orchestrator.getMatrix().displayReset();
-    orchestrator.initMod();*/
-    
-    mod        = !mod;
-    changedMod = true;
+    if ( currentMillis - lastMillis >= DEBOUNCE_DELAY_MS ) {
+        activeMod  = static_cast<AVAILABLE_MOD>(( activeMod + 1 ) % NUM_OF_MOD);
+        changedMod = true;
+        lastMillis = currentMillis;
+        
+        /*Serial.println( "################## SWITCH MOD !!!" );
+        Serial.println( activeMod );
+        Serial.println( "################## activeMod" );*/
+    }
     
     portEXIT_CRITICAL_ISR( &mux );
 }
 
 void initOrchestrator() {
-    //orchestrator.getMatrix().displaySuspend(true);
-    // FIXME correct crash when change the mod
     delete orchestrator.getCurrentMod();
+    orchestrator.setCurrentMod( nullptr );
     
-    if ( !mod ) {
-        orchestrator.setCurrentMod( new MessageMod );
-        resetQueue();
-    } else
-        orchestrator.setCurrentMod( new GraphMod );
+    switch ( activeMod ) {
+        case MESSAGE_MOD:
+            orchestrator.setCurrentMod( new MessageMod );
+            resetQueue();
+            //Serial.println( ">>> MESSAGE MOD" );
+            break;
+        
+        case GRAPH_MOD:
+            orchestrator.setCurrentMod( new GraphMod );
+            //Serial.println( ">>> GRAPH MOD" );
+            break;
+    }
     
     orchestrator.initMod();
     resetQueue();
-    
-    //orchestrator.getMatrix().displayReset(true);
     
     changedMod = false;
 }
 
 void setup() {
     Serial.begin( 115200 );
+    
+    // --- Switch activeMod
     pinMode( SWITCH_MOD_MIN, INPUT_PULLUP );
     attachInterrupt( digitalPinToInterrupt( SWITCH_MOD_MIN ), handleSwitchMod, FALLING );
+    // --- ./Switch activeMod
     
     orchestrator.begin();
     
     initOrchestrator();
-    
-    //orchestrator.setCurrentMod( new MessageMod );
-    //orchestrator.setCurrentMod( new GraphMod );
-    //orchestrator.initMod();
-    
-    //resetQueue();
-    
-    //Serial.print( "First: " );
-    //Serial.println( orchestrator.newSlideAreAvailable() );
 }
 
 void loop() {
-    
-    if ( changedMod )
+    if ( changedMod ) {
         initOrchestrator();
-    else {
+        //Serial.println("#### LOOP ####");
+    } else {
         if ( !orchestrator.getCurrentMod()->needToRefresh() ) {
-            Serial.println( "Reset" );
+            //Serial.println( "Reset" );
             orchestrator.resetMod();
             
             if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
@@ -118,8 +129,8 @@ void loop() {
                 
                 // -------------------------------------
             }
-            
-            Serial.println( "======================" );
+    
+            //Serial.println( "======================" );
         }
         
         orchestrator.updateDisplay();

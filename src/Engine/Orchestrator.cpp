@@ -16,21 +16,21 @@ Orchestrator::Orchestrator( MD_MAX72XX::moduleType_t mod, uint8_t dataPin, uint8
 // -------------------------------------
 // -- Matrix
 
-MD_Parola Orchestrator::getMatrix() {
+MD_Parola *Orchestrator::getMatrix() {
     //Serial.println( "Get matrix" );
-    return matrix;
+    return &matrix;
 }
 
 void Orchestrator::begin() {
     matrix.begin();
-    Serial.println( "Matrix begin" );
+    //Serial.println( "Matrix begin" );
 }
 
 void Orchestrator::updateDisplay() {
     if ( matrix.displayAnimate() ) {
-        Serial.println( "Plop" );
+        //Serial.println( "Plop" );
         currentMod->updateDisplay( &matrix );
-        matrix.displayReset();
+        //matrix.displayReset();
     }
 }
 

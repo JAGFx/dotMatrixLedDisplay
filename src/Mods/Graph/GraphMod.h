@@ -22,6 +22,7 @@ public:
     static const uint8_t STATE_UP_STROKE    = 3;
     static const uint8_t STATE_LAST_STROKE  = 4;
     
+    static const uint8_t SPEED_ANIMATION_MS = 1000;
     
     // IMod
     virtual void updateDisplay( MD_Parola *matrix );
@@ -34,8 +35,12 @@ public:
     
     virtual bool instanceOfMod( ModeType type );
     // ---
+    
+    const uint8_t getOriginalColumnCount();
+    
 
 protected:
+    uint8_t originalColumnCount = 0;
     
     // --- Heartbeat
     uint8_t currentState      = STATE_START;
