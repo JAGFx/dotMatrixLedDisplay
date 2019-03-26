@@ -51,25 +51,25 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 //Serial.println(">> Alt");
                 //Serial.println(gps.altitude.isValid());
                 //if(gps.altitude.isValid())
-                message = String( gps.altitude.meters() );
+                message = String( gps->altitude.meters() );
                 break;
             case DDate:
-                message = String( String( gps.date.year() ) + '-'
-                                  + String( gps.date.month() ) + '-'
-                                  + String( gps.date.day() )
+                message = String( String( gps->date.year() ) + '-'
+                                  + String( gps->date.month() ) + '-'
+                                  + String( gps->date.day() )
                 );
                 break;
             case Latitude:
-                message = String( gps.location.lat(), 6 );
+                message = String( gps->location.lat(), 6 );
                 break;
             case Longitude:
-                message = String( gps.location.lng(), 6 );
+                message = String( gps->location.lng(), 6 );
                 break;
             case Speed:
-                message = String( String( gps.speed.kmph(), 1 ) + " kmh" );
+                message = String( String( gps->speed.kmph(), 1 ) + " kmh" );
                 break;
             case TTime:
-                message = String( String( gps.time.hour() ) + ':' + String( gps.time.minute() ) );
+                message = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
                 break;
         }
         
@@ -92,7 +92,7 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
 }
 
 void TrackingMod::init( MD_Parola *matrix ) {
-
+    gps = new TinyGPSPlus;
 }
 
 void TrackingMod::reset( MD_Parola *matrix ) {
@@ -120,13 +120,13 @@ bool TrackingMod::instanceOfMod( IMod::ModeType type ) {
 // -- Mod management
 
 TinyGPSPlus *TrackingMod::getTrackingObj() {
-    return &gps;
+    return gps;
 }
 
 void TrackingMod::updateRawData( const char *rawData ) {
     //Serial.println( "================ New data" );
     while ( *rawData )
-        gps.encode( *rawData++ );
+        gps->encode( *rawData++ );
 }
 
 /*void TrackingMod::clearQueue() {

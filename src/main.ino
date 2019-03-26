@@ -35,8 +35,6 @@ handleSwitchMod() {
         changedMod = true;
         lastMillis = currentMillis;
         
-        // FIXME Crash when you change th current mod from "Tracking"
-        
         /*Serial.println( "################## SWITCH MOD !!!" );
         Serial.println( activeMod );
         Serial.println( "################## activeMod" );*/

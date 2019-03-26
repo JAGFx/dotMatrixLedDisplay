@@ -47,7 +47,7 @@ public:
 
 protected:
     // Mod management
-    TinyGPSPlus gps;
+    TinyGPSPlus *gps = nullptr;
     
     GPSDisplayMod currentDisplayMode = GPSDisplayMod::Altitude;
     unsigned long lastMillis         = 0;
