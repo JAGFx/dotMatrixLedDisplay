@@ -24,26 +24,29 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         
         // --- Test STR
         // - Altitude
-        /*Serial.print( ">> Altitude : " );
-        Serial.println( String( String( gps.altitude.meters(), 0 ) + 'm' ) );
+        Serial.print( ">> Altitude : " );
+        Serial.println( String( String( gps->altitude.meters(), 0 ) + 'm' ) );
         // - DDate
         Serial.print( ">> DDate : " );
-        Serial.println( String( String( gps.date.year() ) + '-'
-                                + String( gps.date.month() ) + '-'
-                                + String( gps.date.day() ) )
+        Serial.println( String( String( gps->date.year() ) + '-'
+                                + String( gps->date.month() ) + '-'
+                                + String( gps->date.day() ) )
         );
         // - Latitude
         Serial.print( ">> Latitude : " );
-        Serial.println( String( gps.location.lat(), 6 ) );
+        Serial.println( String( gps->location.lat(), 6 ) );
         // - Longitude
         Serial.print( ">> Longitude : " );
-        Serial.println( String( gps.location.lng(), 6 ) );
+        Serial.println( String( gps->location.lng(), 6 ) );
         // - Speed
         Serial.print( ">> Speed : " );
-        Serial.println( String( String( gps.speed.kmph(), 1 ) + " kmh" ) );
+        Serial.println( String( String( gps->speed.kmph(), 1 ) + " kmh" ) );
         // - TTime
         Serial.print( ">> TTime : " );
-        Serial.println( String( String( gps.time.hour() ) + ':' + String( gps.time.minute() ) ) );*/
+        Serial.println( String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) ) );
+        // - Satellites
+        Serial.print( ">> Satellites : " );
+        Serial.println( String( "Sat: " + String( gps->satellites.value() ) ) );
         // --- ./ Test STR
         
         switch ( currentDisplayMode ) {
@@ -70,6 +73,9 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 break;
             case TTime:
                 message = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
+                break;
+            case Satellites:
+                message = String( "Sat: " + String( gps->satellites.value() ) );
                 break;
         }
         
@@ -123,10 +129,10 @@ TinyGPSPlus *TrackingMod::getTrackingObj() {
     return gps;
 }
 
-void TrackingMod::updateRawData( const char *rawData ) {
-    //Serial.println( "================ New data" );
-    while ( *rawData )
-        gps->encode( *rawData++ );
+void TrackingMod::updateRawData( int rawData ) {
+    //Serial.print( "================ New data: " );
+    //Serial.println( rawData );
+    gps->encode( rawData );
 }
 
 /*void TrackingMod::clearQueue() {

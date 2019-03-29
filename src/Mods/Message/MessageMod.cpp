@@ -95,7 +95,7 @@ void MessageMod::reset( MD_Parola *matrix ) {
 }
 
 bool MessageMod::instanceOfMod( IMod::ModeType type ) {
-    return type == IMod::ModeType::MessageMod;
+    return type == IMod::ModeType::Message;
 }
 
 // -------------------------------------

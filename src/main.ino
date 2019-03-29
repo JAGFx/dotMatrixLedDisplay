@@ -6,6 +6,7 @@
 //
 
 #include <MD_Parola.h>
+#include <HardwareSerial.h>
 #include "QueueH.h"
 #include "Engine/Orchestrator.h"
 #include "Mods/Message/MessageMod.h"
@@ -18,7 +19,7 @@
 #define SWITCH_MOD_MIN 25
 #define DEBOUNCE_DELAY_MS 250
 
-volatile IMod::ModeType activeMod  = IMod::ModeType::MessageMod;
+volatile IMod::ModeType activeMod  = IMod::ModeType::Tracking;
 volatile bool           changedMod = false;
 volatile unsigned long  lastMillis = 0;
 
@@ -52,12 +53,17 @@ handleSwitchMod() {
 #define DATA_PIN  12
 #define CS_PIN    15
 
+#define GSP_ESP_SERIAL 2
+#define GPS_SERIAL_BAUD 0
+
 Orchestrator orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
+
+HardwareSerial gpsSerial( GSP_ESP_SERIAL );
 
 void resetData() {
     orchestrator.resetMod();
     
-    if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::MessageMod ) ) {
+    if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::Message ) ) {
         //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message mode reset queue" );
         MessageMod *messageMod = ( MessageMod * ) orchestrator.getCurrentMod();
         
@@ -69,18 +75,12 @@ void resetData() {
         //messageMod->addInQueue( new MessageItem( "tchou", PA_SPRITE, 2000, MessageItem::SPRITES::CHEVRON ) );
         // ---
         messageMod->addInQueue( new MessageItem( "Hellow", PA_MESH, 2000 ) );
-    
+        
     } else if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::Tracking ) ) {
         //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Graph mode reset queue" );
         TrackingMod *trackingMod = ( TrackingMod * ) orchestrator.getCurrentMod();
-        const char  *gpsStream   =
-                            "$GPRMC,045103.000,A,3014.1984,N,09749.2872,W,0.67,161.46,030913,,,A*7C\r\n"
-                            "$GPGGA,045104.000,3014.1985,N,09749.2873,W,1,09,1.2,211.6,M,-22.5,M,,0000*62\r\n"
-                            "$GPRMC,045200.000,A,3014.3820,N,09748.9514,W,36.88,65.02,030913,,,A*77\r\n"
-                            "$GPGGA,045201.000,3014.3864,N,09748.9411,W,1,10,1.2,200.8,M,-22.5,M,,0000*6C\r\n"
-                            "$GPRMC,045251.000,A,3014.4275,N,09749.0626,W,0.51,217.94,030913,,,A*7D\r\n"
-                            "$GPGGA,045252.000,3014.4273,N,09749.0628,W,1,09,1.3,206.9,M,-22.5,M,,0000*6F\r\n";
-        trackingMod->updateRawData( gpsStream );
+        if ( gpsSerial.available() > 0 )
+            trackingMod->updateRawData( gpsSerial.read() );
     }
 }
 
@@ -89,7 +89,7 @@ void initOrchestrator() {
     orchestrator.setCurrentMod( nullptr );
     
     switch ( activeMod ) {
-        case IMod::ModeType::MessageMod:
+        case IMod::ModeType::Message:
             orchestrator.setCurrentMod( new MessageMod );
             //Serial.println( ">>> MESSAGE MOD" );
             break;
@@ -118,6 +118,9 @@ void setup() {
     pinMode( SWITCH_MOD_MIN, INPUT_PULLUP );
     attachInterrupt( digitalPinToInterrupt( SWITCH_MOD_MIN ), handleSwitchMod, FALLING );
     // --- ./Switch activeMod
+    
+    gpsSerial.begin( GPS_SERIAL_BAUD ); // RX, TX
+    //https://quadmeup.com/arduino-esp32-and-3-hardware-serial-ports/
     
     orchestrator.begin();
     

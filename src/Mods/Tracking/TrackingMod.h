@@ -24,6 +24,7 @@ public:
         Longitude,
         Speed,
         TTime,
+        Satellites,
         NumOfMod
     };
     
@@ -42,7 +43,7 @@ public:
     // Mod management
     TinyGPSPlus *getTrackingObj();
     
-    void updateRawData( const char *rawData );
+    void updateRawData( int rawData );
     // ----
 
 protected:
