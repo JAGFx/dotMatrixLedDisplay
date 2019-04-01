@@ -17,6 +17,8 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
     //Serial.println( "============= START" );
     if ( needToRefresh() ) {
         lastMillis = millis();
+    
+        UTC::updateChipDate( gps->date, gps->time );
         
         //Serial.println( "Plop" );
         //Serial.println(gps.altitude.meters());
@@ -29,10 +31,14 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         Serial.println( String( String( gps->altitude.meters(), 0 ) + 'm' ) );
         // - DDate
         Serial.print( ">> DDate : " );
-        Serial.println( String( String( gps->date.year() ) + '-'
-                                + String( gps->date.month() ) + '-'
-                                + String( gps->date.day() ) )
+        Serial.println( String( UTC::getYear() + '-'
+                                + UTC::getMonth() + '-'
+                                + UTC::getDay()
+                        )
         );
+        // - TTime
+        Serial.print( ">> TTime : " );
+        Serial.println( String( UTC::getHour() + ':' + UTC::getMinute() ) );
         // - Latitude
         Serial.print( ">> Latitude : " );
         Serial.println( String( gps->location.lat(), 6 ) );
@@ -42,9 +48,6 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         // - Speed
         Serial.print( ">> Speed : " );
         Serial.println( String( String( gps->speed.kmph(), 1 ) + " kmh" ) );
-        // - TTime
-        Serial.print( ">> TTime : " );
-        Serial.println( String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) ) );
         // - Satellites
         Serial.print( ">> Satellites : " );
         Serial.println( String( "Sat: " + String( gps->satellites.value() ) ) );
@@ -58,7 +61,6 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 message = String( gps->altitude.meters() );
                 break;
             case DDate:
-                UTC::updateChipDate( gps->date, gps->time );
                 /*message = String( String( gps->date.year() ) + '-'
                                   + String( gps->date.month() ) + '-'
                                   + String( gps->date.day() )
@@ -70,7 +72,6 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 break;
             case TTime:
                 //message = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
-                UTC::updateChipDate( gps->date, gps->time );
                 message = String( UTC::getHour() + ':' + UTC::getMinute() );
                 break;
             case Latitude:

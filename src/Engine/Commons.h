@@ -27,6 +27,10 @@ public:
     static const String getMonth();
     
     static const String getDay();
+    
+    // TODO Add converting D.d to DMS position
+    // https://forum.arduino.cc/index.php?topic=111153.0
+    // https://www.electronicwings.com/arduino/gps-module-interfacing-with-arduino-uno
 
 private:
     
