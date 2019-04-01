@@ -13,7 +13,7 @@
 class IMod {
 public:
     enum ModeType {
-        MessageMod,
+        Message,
         Graph,
         Tracking,
         NumOfMod

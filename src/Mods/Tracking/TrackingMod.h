@@ -20,10 +20,10 @@ public:
     enum GPSDisplayMod {
         Altitude,
         DDate,
+        TTime,
         Latitude,
         Longitude,
         Speed,
-        TTime,
         Satellites,
         NumOfMod
     };

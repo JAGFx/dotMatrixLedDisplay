@@ -8,6 +8,7 @@
 
 #include "TrackingMod.h"
 #include "../../Engine/Orchestrator.h"
+#include "../../Engine/Commons.h"
 
 // -------------------------------------
 // -- IMod
@@ -57,10 +58,20 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 message = String( gps->altitude.meters() );
                 break;
             case DDate:
-                message = String( String( gps->date.year() ) + '-'
+                UTC::updateChipDate( gps->date, gps->time );
+                /*message = String( String( gps->date.year() ) + '-'
                                   + String( gps->date.month() ) + '-'
                                   + String( gps->date.day() )
+                );*/
+                message = String( UTC::getYear() + '-'
+                                  + UTC::getMonth() + '-'
+                                  + UTC::getDay()
                 );
+                break;
+            case TTime:
+                //message = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
+                UTC::updateChipDate( gps->date, gps->time );
+                message = String( UTC::getHour() + ':' + UTC::getMinute() );
                 break;
             case Latitude:
                 message = String( gps->location.lat(), 6 );
@@ -70,9 +81,6 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 break;
             case Speed:
                 message = String( String( gps->speed.kmph(), 1 ) + " kmh" );
-                break;
-            case TTime:
-                message = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
                 break;
             case Satellites:
                 message = String( "Sat: " + String( gps->satellites.value() ) );
