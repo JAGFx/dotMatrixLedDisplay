@@ -12,6 +12,9 @@
 #include <Timezone.h>
 #include <TinyGPS++.h>
 
+// -----------------------------------------
+// --- UTC
+
 class UTC {
 public:
     static void updateChipDate( TinyGPSDate gpsDate, TinyGPSTime gpsTime );
@@ -27,14 +30,24 @@ public:
     static const String getMonth();
     
     static const String getDay();
-    
-    // TODO Add converting D.d to DMS position
-    // https://forum.arduino.cc/index.php?topic=111153.0
-    // https://www.electronicwings.com/arduino/gps-module-interfacing-with-arduino-uno
 
 private:
     
     static time_t getAdjustedTime();
+    
+};
+
+// -----------------------------------------
+// --- Position
+
+class Position {
+public:
+    static const String getLatitudeAsDMS( double currentPosition );
+    
+    static const String getLongitudeAsDMS( double currentPosition );
+
+private:
+    static String convertDDPositionToDMS( double currentPosition );
 };
 
 

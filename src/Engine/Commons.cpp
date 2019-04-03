@@ -8,6 +8,8 @@
 
 #include "Commons.h"
 
+// -----------------------------------------
+// --- UTC
 
 void UTC::updateChipDate( TinyGPSDate gpsDate, TinyGPSTime gpsTime ) {
     int  Year   = gpsDate.year();
@@ -21,19 +23,19 @@ void UTC::updateChipDate( TinyGPSDate gpsDate, TinyGPSTime gpsTime ) {
 }
 
 const String UTC::getHour() {
-    return ( hour( getAdjustedTime() ) < 0 )
+    return ( hour( getAdjustedTime() ) < 10 )
            ? "0" + String( hour( getAdjustedTime() ) )
            : String( hour( getAdjustedTime() ) );
 }
 
 const String UTC::getMinute() {
-    return ( minute( getAdjustedTime() ) < 0 )
+    return ( minute( getAdjustedTime() ) < 10 )
            ? "0" + String( minute( getAdjustedTime() ) )
            : String( minute( getAdjustedTime() ) );
 }
 
 const String UTC::getSecond() {
-    return ( second( getAdjustedTime() ) < 0 )
+    return ( second( getAdjustedTime() ) < 10 )
            ? "0" + String( second( getAdjustedTime() ) )
            : String( second( getAdjustedTime() ) );
 }
@@ -44,13 +46,13 @@ const String UTC::getYear() {
 }
 
 const String UTC::getMonth() {
-    return ( month( getAdjustedTime() ) < 0 )
+    return ( month( getAdjustedTime() ) < 10 )
            ? "0" + String( month( getAdjustedTime() ) )
            : String( month( getAdjustedTime() ) );
 }
 
 const String UTC::getDay() {
-    return ( day( getAdjustedTime() ) < 0 )
+    return ( day( getAdjustedTime() ) < 10 )
            ? "0" + String( day( getAdjustedTime() ) )
            : String( day( getAdjustedTime() ) );
 }
@@ -64,4 +66,32 @@ time_t UTC::getAdjustedTime() {
     
     time_t utc = now();  // read the time in the correct format to change via the TimeChangeRules
     return CE.toLocal( utc );
+}
+
+// -----------------------------------------
+// --- Position
+
+const String Position::getLatitudeAsDMS( double currentPosition ) {
+    return String( convertDDPositionToDMS( currentPosition ) + " N" );
+}
+
+const String Position::getLongitudeAsDMS( double currentPosition ) {
+    return String( convertDDPositionToDMS( currentPosition ) + " W" );
+}
+
+String Position::convertDDPositionToDMS( double currentPosition ) {
+    float minutes, seconds;
+    int   degree, secs, mins;
+    
+    degree  = ( int ) currentPosition;
+    minutes = currentPosition - degree;
+    seconds = 60 * minutes;
+    minutes = ( int ) seconds;
+    mins    = ( int ) minutes;
+    seconds = seconds - minutes;
+    seconds = 60 * seconds;
+    secs    = ( int ) seconds;
+    
+    // FIXME Find a way to display "°" correctly
+    return String( String( degree ) + "°" + String( mins ) + "'" + String( seconds ) + "\"" );
 }

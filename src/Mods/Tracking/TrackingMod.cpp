@@ -41,10 +41,12 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         Serial.println( String( UTC::getHour() + ':' + UTC::getMinute() ) );
         // - Latitude
         Serial.print( ">> Latitude : " );
-        Serial.println( String( gps->location.lat(), 6 ) );
+        //Serial.println( String( gps->location.lat(), 6 ) );
+        Serial.println( Position::getLatitudeAsDMS( gps->location.lat() ) );
         // - Longitude
         Serial.print( ">> Longitude : " );
-        Serial.println( String( gps->location.lng(), 6 ) );
+        //Serial.println( String( gps->location.lng(), 6 ) );
+        Serial.println( Position::getLongitudeAsDMS( gps->location.lng() ) );
         // - Speed
         Serial.print( ">> Speed : " );
         Serial.println( String( String( gps->speed.kmph(), 1 ) + " kmh" ) );
@@ -58,7 +60,7 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 //Serial.println(">> Alt");
                 //Serial.println(gps.altitude.isValid());
                 //if(gps.altitude.isValid())
-                message = String( gps->altitude.meters() );
+                message = String( String( gps->altitude.meters() ) + "m" );
                 break;
             case DDate:
                 /*message = String( String( gps->date.year() ) + '-'
@@ -75,10 +77,10 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 message = String( UTC::getHour() + ':' + UTC::getMinute() );
                 break;
             case Latitude:
-                message = String( gps->location.lat(), 6 );
+                message = Position::getLatitudeAsDMS( gps->location.lat() );
                 break;
             case Longitude:
-                message = String( gps->location.lng(), 6 );
+                message = Position::getLongitudeAsDMS( gps->location.lng() );
                 break;
             case Speed:
                 message = String( String( gps->speed.kmph(), 1 ) + " kmh" );
