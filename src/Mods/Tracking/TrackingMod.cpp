@@ -91,17 +91,8 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         }
         
         //Serial.println( message );
-        
-        currentDisplayMode = static_cast<GPSDisplayMod>(( currentDisplayMode + 1 ) % GPSDisplayMod::NumOfMod);
-        
-        matrix->displayText( ( char * ) message.c_str(),
-                             Orchestrator::DEFAULT_SCROLL_ALIGN,
-                             Orchestrator::DEFAULT_SCROLL_SPEED,
-                             1000,
-                             PA_GROW_UP,
-                             PA_GROW_DOWN );
-        
-        
+    
+        manageIterations( &matrix, message );
         //delay( 1500 );
     }
     
@@ -146,9 +137,26 @@ void TrackingMod::updateRawData( int rawData ) {
     gps->encode( rawData );
 }
 
-/*void TrackingMod::clearQueue() {
-    delete currentMessageItem;
-    currentMessageItem = nullptr;
-}*/
+void TrackingMod::manageIterations( MD_Parola *matrix, String message ) {
+    textEffect_t effectIn = ( currentIteration == 0 )
+                            ? PA_GROW_UP
+                            : PA_PRINT;
+    
+    textEffect_t effectOut = ( currentIteration == MAX_ITERATION - 1 )
+                             ? PA_GROW_DOWN
+                             : PA_PRINT;
+    
+    matrix->displayText( ( char * ) message.c_str(),
+                         Orchestrator::DEFAULT_SCROLL_ALIGN,
+                         Orchestrator::DEFAULT_SCROLL_SPEED,
+                         REFRESH_DELAY_MS,
+                         effectIn,
+                         effectOut );
+    
+    currentIteration = currentIteration++ % MAX_ITERATION;
+    
+    if ( currentIteration == 0 )
+        currentDisplayMode = static_cast<GPSDisplayMod>(( currentDisplayMode + 1 ) % GPSDisplayMod::NumOfMod);
+}
 
 // -------------------------------------

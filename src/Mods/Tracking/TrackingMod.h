@@ -16,6 +16,7 @@ class TrackingMod : public IMod {
 public:
     
     static const unsigned long REFRESH_DELAY_MS = 1000;
+    static const uint8_t       MAX_ITERATION    = 5;
     
     enum GPSDisplayMod {
         Altitude,
@@ -52,6 +53,9 @@ protected:
     
     GPSDisplayMod currentDisplayMode = GPSDisplayMod::Altitude;
     unsigned long lastMillis         = 0;
+    uint8_t       currentIteration   = 0;
+    
+    void manageIterations( MD_Parola *matrix, String message );
     // ----
 };
 
