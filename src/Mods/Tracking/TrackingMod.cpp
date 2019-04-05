@@ -38,7 +38,7 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         );
         // - TTime
         Serial.print( ">> TTime : " );
-        Serial.println( String( UTC::getHour() + ':' + UTC::getMinute() ) );
+        Serial.println( String( UTC::getHour() + ':' + UTC::getMinute() + ':' + UTC::getSecond() ) );
         // - Latitude
         Serial.print( ">> Latitude : " );
         //Serial.println( String( gps->location.lat(), 6 ) );
@@ -74,7 +74,7 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 break;
             case TTime:
                 //message = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
-                message = String( UTC::getHour() + ':' + UTC::getMinute() );
+                message = String( UTC::getHour() + ':' + UTC::getMinute() + ':' + UTC::getSecond() );
                 break;
             case Latitude:
                 message = Position::getLatitudeAsDMS( gps->location.lat() );
@@ -92,7 +92,7 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         
         //Serial.println( message );
     
-        manageIterations( &matrix, message );
+        manageIterations( matrix, message );
         //delay( 1500 );
     }
     
@@ -138,22 +138,28 @@ void TrackingMod::updateRawData( int rawData ) {
 }
 
 void TrackingMod::manageIterations( MD_Parola *matrix, String message ) {
-    textEffect_t effectIn = ( currentIteration == 0 )
-                            ? PA_GROW_UP
-                            : PA_PRINT;
+    textEffect_t effectIn  = PA_PRINT;
+    textEffect_t effectOut = PA_PRINT;
+    uint8_t      speed     = 0;
     
-    textEffect_t effectOut = ( currentIteration == MAX_ITERATION - 1 )
-                             ? PA_GROW_DOWN
-                             : PA_PRINT;
+    if ( currentIteration == 0 ) {
+        effectIn = PA_GROW_UP;
+        speed    = Orchestrator::DEFAULT_SCROLL_SPEED;
+    }
+    
+    if ( currentIteration == MAX_ITERATION - 1 ) {
+        effectOut = PA_GROW_DOWN;
+        speed     = Orchestrator::DEFAULT_SCROLL_SPEED;
+    }
     
     matrix->displayText( ( char * ) message.c_str(),
                          Orchestrator::DEFAULT_SCROLL_ALIGN,
-                         Orchestrator::DEFAULT_SCROLL_SPEED,
+                         speed,
                          REFRESH_DELAY_MS,
                          effectIn,
                          effectOut );
     
-    currentIteration = currentIteration++ % MAX_ITERATION;
+    currentIteration = ( ++currentIteration ) % MAX_ITERATION;
     
     if ( currentIteration == 0 )
         currentDisplayMode = static_cast<GPSDisplayMod>(( currentDisplayMode + 1 ) % GPSDisplayMod::NumOfMod);

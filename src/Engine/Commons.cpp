@@ -80,6 +80,8 @@ const String Position::getLongitudeAsDMS( double currentPosition ) {
 }
 
 String Position::convertDDPositionToDMS( double currentPosition ) {
+    // https://www.sunearthtools.com/dp/tools/conversion.php?lang=en
+    
     float minutes, seconds;
     int   degree, secs, mins;
     
