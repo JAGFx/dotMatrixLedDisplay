@@ -16,7 +16,7 @@
 // -------------------------------------------------
 // --- Switch activeMod
 
-#define SWITCH_MOD_MIN 25
+#define SWITCH_MOD_PIN 25
 #define DEBOUNCE_DELAY_MS 250
 
 volatile IMod::ModeType activeMod  = IMod::ModeType::Tracking;
@@ -115,8 +115,8 @@ void setup() {
     Serial.begin( 115200 );
     
     // --- Switch activeMod
-    pinMode( SWITCH_MOD_MIN, INPUT_PULLUP );
-    attachInterrupt( digitalPinToInterrupt( SWITCH_MOD_MIN ), handleSwitchMod, FALLING );
+    pinMode( SWITCH_MOD_PIN, INPUT_PULLUP );
+    attachInterrupt( digitalPinToInterrupt( SWITCH_MOD_PIN ), handleSwitchMod, FALLING );
     // --- ./Switch activeMod
     
     gpsSerial.begin( GPS_SERIAL_BAUD ); // RX, TX
