@@ -3,4 +3,5 @@
 .piolibdeps
 CMakeListsPrivate.txt
 .idea/
+!/lib/
 cmake-build-debug/git status

@@ -48,7 +48,7 @@ handleSwitchMod() {
 // -------------------------------------------------
 
 #define HARDWARE_TYPE MD_MAX72XX::ICSTATION_HW
-#define MAX_DEVICES 4
+#define MAX_DEVICES 8
 #define CLK_PIN   14
 #define DATA_PIN  12
 #define CS_PIN    15
