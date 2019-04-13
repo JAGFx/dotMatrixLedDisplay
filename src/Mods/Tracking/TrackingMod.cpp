@@ -19,6 +19,7 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         lastMillis = millis();
     
         UTC::updateChipDate( gps->date, gps->time );
+        connectedToGPSSatellites = ( gps->satellites.value() > 0 );
         
         //Serial.println( "Plop" );
         //Serial.println(gps.altitude.meters());
@@ -200,8 +201,6 @@ String TrackingMod::displaySpeed( TinyGPSSpeed dataSpeed ) {
 }
 
 String TrackingMod::displaySatellites( TinyGPSInteger dataSats ) {
-    connectedToGPSSatellites = ( dataSats.value() > 0 );
-    
     return String( "Sat: " + String( dataSats.value() ) );
 }
 
