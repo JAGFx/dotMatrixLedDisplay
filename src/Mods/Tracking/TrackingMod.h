@@ -51,11 +51,28 @@ protected:
     // Mod management
     TinyGPSPlus *gps = nullptr;
     
-    GPSDisplayMod currentDisplayMode = GPSDisplayMod::Altitude;
-    unsigned long lastMillis         = 0;
-    uint8_t       currentIteration   = 0;
+    GPSDisplayMod currentDisplayMode       = GPSDisplayMod::Altitude;
+    unsigned long lastMillis               = 0;
+    uint8_t       currentIteration         = 0;
+    bool          connectedToGPSSatellites = false;
     
     void manageIterations( MD_Parola *matrix, String message );
+    // ----
+    
+    // Text drawing
+    String displayAltitude( TinyGPSAltitude dataAlti );
+    
+    String displayDDate();
+    
+    String displayTTime();
+    
+    String displayLatitude( TinyGPSLocation dataLat );
+    
+    String displayLongitude( TinyGPSLocation dataLong );
+    
+    String displaySpeed( TinyGPSSpeed dataSpeed );
+    
+    String displaySatellites( TinyGPSInteger dataSats );
     // ----
 };
 

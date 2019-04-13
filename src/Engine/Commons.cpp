@@ -79,6 +79,14 @@ const String Position::getLongitudeAsDMS( double currentPosition ) {
     return String( convertDDPositionToDMS( currentPosition ) + " E" );
 }
 
+const String Position::emptyLatitudeAsDMS() {
+    return String( "-°-'-.-\" N" );
+}
+
+const String Position::emptyLongitudeAsDMS() {
+    return String( "-°-'-.-\" E" );
+}
+
 String Position::convertDDPositionToDMS( double currentPosition ) {
     // https://www.sunearthtools.com/dp/tools/conversion.php?lang=en
     

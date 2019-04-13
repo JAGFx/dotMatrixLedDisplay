@@ -45,6 +45,10 @@ public:
     static const String getLatitudeAsDMS( double currentPosition );
     
     static const String getLongitudeAsDMS( double currentPosition );
+    
+    static const String emptyLatitudeAsDMS();
+    
+    static const String emptyLongitudeAsDMS();
 
 private:
     static String convertDDPositionToDMS( double currentPosition );

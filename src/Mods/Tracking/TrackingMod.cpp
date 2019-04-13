@@ -28,31 +28,27 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         // --- Test STR
         // - Altitude
         Serial.print( ">> Altitude : " );
-        Serial.println( String( String( gps->altitude.meters(), 0 ) + 'm' ) );
+        Serial.println( displayAltitude( gps->altitude ) );
         // - DDate
         Serial.print( ">> DDate : " );
-        Serial.println( String( UTC::getYear() + '-'
-                                + UTC::getMonth() + '-'
-                                + UTC::getDay()
-                        )
-        );
+        Serial.println( displayDDate() );
         // - TTime
         Serial.print( ">> TTime : " );
-        Serial.println( String( UTC::getHour() + ':' + UTC::getMinute() + ':' + UTC::getSecond() ) );
+        Serial.println( displayTTime() );
         // - Latitude
         Serial.print( ">> Latitude : " );
         //Serial.println( String( gps->location.lat(), 6 ) );
-        Serial.println( Position::getLatitudeAsDMS( gps->location.lat() ) );
+        Serial.println( displayLatitude( gps->location ) );
         // - Longitude
         Serial.print( ">> Longitude : " );
         //Serial.println( String( gps->location.lng(), 6 ) );
-        Serial.println( Position::getLongitudeAsDMS( gps->location.lng() ) );
+        Serial.println( displayLongitude( gps->location ) );
         // - Speed
         Serial.print( ">> Speed : " );
-        Serial.println( String( String( gps->speed.kmph(), 1 ) + " kmh" ) );
+        Serial.println( displaySpeed( gps->speed ) );
         // - Satellites
         Serial.print( ">> Satellites : " );
-        Serial.println( String( "Sat: " + String( gps->satellites.value() ) ) );
+        Serial.println( displaySatellites( gps->satellites ) );
         // --- ./ Test STR
         
         switch ( currentDisplayMode ) {
@@ -60,33 +56,30 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 //Serial.println(">> Alt");
                 //Serial.println(gps.altitude.isValid());
                 //if(gps.altitude.isValid())
-                message = String( String( gps->altitude.meters() ) + "m" );
+                message = displayAltitude( gps->altitude );
                 break;
             case DDate:
                 /*message = String( String( gps->date.year() ) + '-'
                                   + String( gps->date.month() ) + '-'
                                   + String( gps->date.day() )
                 );*/
-                message = String( UTC::getYear() + '-'
-                                  + UTC::getMonth() + '-'
-                                  + UTC::getDay()
-                );
+                message = displayDDate();
                 break;
             case TTime:
                 //message = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
-                message = String( UTC::getHour() + ':' + UTC::getMinute() + ':' + UTC::getSecond() );
+                message = displayTTime();
                 break;
             case Latitude:
-                message = Position::getLatitudeAsDMS( gps->location.lat() );
+                message = displayLatitude( gps->location );
                 break;
             case Longitude:
-                message = Position::getLongitudeAsDMS( gps->location.lng() );
+                message = displayLongitude( gps->location );
                 break;
             case Speed:
-                message = String( String( gps->speed.kmph(), 1 ) + " kmh" );
+                message = displaySpeed( gps->speed );
                 break;
             case Satellites:
-                message = String( "Sat: " + String( gps->satellites.value() ) );
+                message = displaySatellites( gps->satellites );
                 break;
         }
         
@@ -163,6 +156,53 @@ void TrackingMod::manageIterations( MD_Parola *matrix, String message ) {
     
     if ( currentIteration == 0 )
         currentDisplayMode = static_cast<GPSDisplayMod>(( currentDisplayMode + 1 ) % GPSDisplayMod::NumOfMod);
+}
+
+// -------------------------------------
+
+
+// -------------------------------------
+// -- Text drawing
+
+String TrackingMod::displayAltitude( TinyGPSAltitude dataAlti ) {
+    return ( connectedToGPSSatellites )
+           ? String( "Alt: " + String( dataAlti.meters() ) + "m" )
+           : String( "Alt: -.-m" );
+}
+
+String TrackingMod::displayDDate() {
+    return String( UTC::getYear() + '-'
+                   + UTC::getMonth() + '-'
+                   + UTC::getDay()
+    );
+}
+
+String TrackingMod::displayTTime() {
+    return String( UTC::getHour() + ':' + UTC::getMinute() + ':' + UTC::getSecond() );
+}
+
+String TrackingMod::displayLatitude( TinyGPSLocation dataLat ) {
+    return ( connectedToGPSSatellites )
+           ? Position::getLatitudeAsDMS( dataLat.lat() )
+           : Position::emptyLatitudeAsDMS();
+}
+
+String TrackingMod::displayLongitude( TinyGPSLocation dataLong ) {
+    return ( connectedToGPSSatellites )
+           ? Position::getLongitudeAsDMS( dataLong.lng() )
+           : Position::emptyLongitudeAsDMS();
+}
+
+String TrackingMod::displaySpeed( TinyGPSSpeed dataSpeed ) {
+    return ( connectedToGPSSatellites )
+           ? String( String( dataSpeed.kmph(), 1 ) + " kmh" )
+           : String( "-.- kmh" );
+}
+
+String TrackingMod::displaySatellites( TinyGPSInteger dataSats ) {
+    connectedToGPSSatellites = ( dataSats.value() > 0 );
+    
+    return String( "Sat: " + String( dataSats.value() ) );
 }
 
 // -------------------------------------
