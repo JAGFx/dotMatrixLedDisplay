@@ -76,7 +76,7 @@ const String Position::getLatitudeAsDMS( double currentPosition ) {
 }
 
 const String Position::getLongitudeAsDMS( double currentPosition ) {
-    return String( convertDDPositionToDMS( currentPosition ) + " W" );
+    return String( convertDDPositionToDMS( currentPosition ) + " E" );
 }
 
 String Position::convertDDPositionToDMS( double currentPosition ) {
@@ -94,6 +94,5 @@ String Position::convertDDPositionToDMS( double currentPosition ) {
     seconds = 60 * seconds;
     secs    = ( int ) seconds;
     
-    // FIXME Find a way to display "°" correctly
     return String( String( degree ) + "°" + String( mins ) + "'" + String( seconds ) + "\"" );
 }

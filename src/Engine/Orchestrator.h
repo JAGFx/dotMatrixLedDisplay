@@ -10,6 +10,7 @@
 
 #include "../Mods/Message/MessageItem.h"
 #include "IMod.h"
+#include "ParolaFont.h"
 #include <MD_Parola.h>
 
 class Orchestrator {

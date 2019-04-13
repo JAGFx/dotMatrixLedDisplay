@@ -10,7 +10,6 @@
 
 Orchestrator::Orchestrator( MD_MAX72XX::moduleType_t mod, uint8_t dataPin, uint8_t clkPin, uint8_t csPin,
                             uint8_t numDevices ) : matrix( MD_Parola( mod, dataPin, clkPin, csPin, numDevices ) ) {
-    matrix.setIntensity( Orchestrator::DEFAULT_LED_INTENSITY );
 }
 
 // -------------------------------------
@@ -23,6 +22,8 @@ MD_Parola *Orchestrator::getMatrix() {
 
 void Orchestrator::begin() {
     matrix.begin();
+    matrix.setIntensity( Orchestrator::DEFAULT_LED_INTENSITY );
+    matrix.setFont( font );
     //Serial.println( "Matrix begin" );
 }
 
