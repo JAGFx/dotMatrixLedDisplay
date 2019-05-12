@@ -5,3 +5,4 @@ CMakeListsPrivate.txt
 .idea/
 !/lib/
 cmake-build-debug/
+/src/Engine/Settings.h

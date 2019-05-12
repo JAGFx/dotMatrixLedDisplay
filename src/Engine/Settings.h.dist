@@ -1,0 +1,20 @@
+//
+// Created by CLion.
+// @author: SMITH Emmanuel <hey@emmanuel-smith.me>
+// @site: https://emmanuel-smith.me
+// Date: 12-May-19
+// Time: 18:33
+//
+
+#ifndef DOTMATRIXLEDDISPLAY_SETTINGS_H
+#define DOTMATRIXLEDDISPLAY_SETTINGS_H
+
+#define BT_NAME "MyDeviceMatrix"
+
+// Send(1) or received(0)|Mod|ActionID
+// 0x0|00|00
+#define BT_CODE_SWITCH_MOD 0x00100
+#define BT_CODE_CURRENT_MOD 0x10101
+#define BT_CODE_NONE 0x0
+
+#endif //DOTMATRIXLEDDISPLAY_SETTINGS_H

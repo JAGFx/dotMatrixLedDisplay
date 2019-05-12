@@ -27,7 +27,7 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         String message = "###";
         
         // --- Test STR
-        // - Altitude
+        /*// - Altitude
         Serial.print( ">> Altitude : " );
         Serial.println( displayAltitude( gps->altitude ) );
         // - DDate
@@ -49,7 +49,7 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         Serial.println( displaySpeed( gps->speed ) );
         // - Satellites
         Serial.print( ">> Satellites : " );
-        Serial.println( displaySatellites( gps->satellites ) );
+        Serial.println( displaySatellites( gps->satellites ) );*/
         // --- ./ Test STR
         
         switch ( currentDisplayMode ) {

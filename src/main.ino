@@ -9,6 +9,7 @@
 #include <HardwareSerial.h>
 #include "QueueH.h"
 #include "Engine/Orchestrator.h"
+#include "Engine/ExternalDeviceInteraction.h"
 #include "Mods/Message/MessageMod.h"
 #include "Mods/Graph/GraphMod.h"
 #include "Mods/Tracking/TrackingMod.h"
@@ -19,11 +20,11 @@
 #define SWITCH_MOD_PIN 25
 #define DEBOUNCE_DELAY_MS 250
 
-volatile IMod::ModeType activeMod  = IMod::ModeType::Tracking;
+volatile IMod::ModeType activeMod  = IMod::ModeType::Message;
 volatile bool           changedMod = false;
 volatile unsigned long  lastMillis = 0;
 
-portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+portMUX_TYPE mux                          = portMUX_INITIALIZER_UNLOCKED;
 
 void IRAM_ATTR
 
@@ -47,18 +48,52 @@ handleSwitchMod() {
 // --- ./Switch activeMod
 // -------------------------------------------------
 
+
+
+// -------------------------------------------------
+// --- BLE parse action
+
+ExternalDeviceInteraction edi;
+bool                      actionInProcess = false;
+
+void handleBLEAction() {
+    ExternalDeviceInteraction::BLE_ACTIONS currentAction;
+    currentAction = edi.getAction();
+    
+    if ( currentAction != ExternalDeviceInteraction::BLE_ACTIONS::NONE && !actionInProcess ) {
+        actionInProcess = true;
+        
+        switch ( currentAction ) {
+            case ExternalDeviceInteraction::BLE_ACTIONS::SWITCH_MODE:
+                handleSwitchMod();
+                actionInProcess = false;
+                break;
+            
+            case ExternalDeviceInteraction::BLE_ACTIONS::CURRENT_MODE:
+                edi.sendData( String( activeMod ) );
+                actionInProcess = false;
+                break;
+        }
+    }
+}
+
+// --- ./BLE parse action
+// -------------------------------------------------
+
+
+
 #define HARDWARE_TYPE MD_MAX72XX::ICSTATION_HW
 #define MAX_DEVICES 8
 #define CLK_PIN   14
 #define DATA_PIN  12
 #define CS_PIN    15
 
-#define GSP_ESP_SERIAL 2
+#define GPS_ESP_SERIAL 2
 #define GPS_SERIAL_BAUD 0
 
 Orchestrator orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
 
-HardwareSerial gpsSerial( GSP_ESP_SERIAL );
+HardwareSerial gpsSerial( GPS_ESP_SERIAL );
 
 void resetData() {
     orchestrator.resetMod();
@@ -122,6 +157,9 @@ void setup() {
     gpsSerial.begin( GPS_SERIAL_BAUD ); // RX, TX
     //https://quadmeup.com/arduino-esp32-and-3-hardware-serial-ports/
     
+    edi.init();
+    // https://circuitdigest.com/microcontroller-projects/using-classic-bluetooth-in-esp32-and-toogle-an-led
+    
     orchestrator.begin();
     
     initOrchestrator();
@@ -132,6 +170,9 @@ void loop() {
         initOrchestrator();
         //Serial.println("#### LOOP ####");
     } else {
+    
+        handleBLEAction();
+        
         if ( !orchestrator.getCurrentMod()->needToRefresh() ) {
             //Serial.println( "Reset" );
             orchestrator.resetMod();
