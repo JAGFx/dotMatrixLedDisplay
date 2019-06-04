@@ -56,24 +56,43 @@ handleSwitchMod() {
 ExternalDeviceInteraction edi;
 bool                      actionInProcess = false;
 
-void handleBLEAction() {
-    ExternalDeviceInteraction::BLE_ACTIONS currentAction;
-    currentAction = edi.getAction();
-    
-    if ( currentAction != ExternalDeviceInteraction::BLE_ACTIONS::NONE && !actionInProcess ) {
-        actionInProcess = true;
+void handleBLEAction( esp_spp_cb_event_t event, esp_spp_cb_param_t *param ) {
+    switch ( event ) {
+        case ESP_SPP_INIT_EVT:
+            Serial.println( "Bluetooth Device is Ready to Pair" );
+            break;
         
-        switch ( currentAction ) {
-            case ExternalDeviceInteraction::BLE_ACTIONS::SWITCH_MODE:
-                handleSwitchMod();
-                actionInProcess = false;
-                break;
+        case ESP_SPP_SRV_OPEN_EVT:
+            Serial.println( "Client Connected has address:" );
+            break;
+        
+        case ESP_SPP_DATA_IND_EVT:
+            Serial.println( "Data received" );
+            ExternalDeviceInteraction::BLE_ACTIONS command = ExternalDeviceInteraction::BLE_ACTIONS::NONE;
             
-            case ExternalDeviceInteraction::BLE_ACTIONS::CURRENT_MODE:
-                edi.sendData( String( activeMod ) );
-                actionInProcess = false;
-                break;
-        }
+            char buf[1024];
+            snprintf( buf, ( size_t ) param->data_ind.len, ( char * ) param->data_ind.data );
+            command = ( ExternalDeviceInteraction::BLE_ACTIONS ) strtol( buf, 0, 16 );
+            
+            Serial.println( strtol( buf, 0, 16 ) );
+            
+            if ( command != ExternalDeviceInteraction::BLE_ACTIONS::NONE && !actionInProcess ) {
+                actionInProcess = true;
+                
+                switch ( command ) {
+                    case ExternalDeviceInteraction::BLE_ACTIONS::SWITCH_MODE:
+                        handleSwitchMod();
+                        actionInProcess = false;
+                        break;
+                    
+                    case ExternalDeviceInteraction::BLE_ACTIONS::CURRENT_MODE:
+                        edi.sendData( String( activeMod ) );
+                        actionInProcess = false;
+                        break;
+                }
+            }
+            
+            break;
     }
 }
 
@@ -157,8 +176,10 @@ void setup() {
     gpsSerial.begin( GPS_SERIAL_BAUD ); // RX, TX
     //https://quadmeup.com/arduino-esp32-and-3-hardware-serial-ports/
     
+    edi.getBLESerial()->register_callback( handleBLEAction );
     edi.init();
     // https://circuitdigest.com/microcontroller-projects/using-classic-bluetooth-in-esp32-and-toogle-an-led
+    // https://www.dfrobot.com/blog-1204.html
     
     orchestrator.begin();
     
@@ -170,9 +191,6 @@ void loop() {
         initOrchestrator();
         //Serial.println("#### LOOP ####");
     } else {
-    
-        handleBLEAction();
-        
         if ( !orchestrator.getCurrentMod()->needToRefresh() ) {
             //Serial.println( "Reset" );
             orchestrator.resetMod();

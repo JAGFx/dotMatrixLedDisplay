@@ -9,7 +9,7 @@
 #ifndef DOTMATRIXLEDDISPLAY_GRAPHMOD_H
 #define DOTMATRIXLEDDISPLAY_GRAPHMOD_H
 
-#include <MD_MAX72XX.h>
+#include <MD_MAX72xx.h>
 #include "../../Engine/IMod.h"
 
 class GraphMod : public IMod {

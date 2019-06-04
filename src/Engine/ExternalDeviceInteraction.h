@@ -24,9 +24,9 @@ public:
         NONE         = BT_CODE_NONE
     };
     
-    BLE_ACTIONS getAction();
-    
     void sendData( String data );
+    
+    BluetoothSerial *getBLESerial();
 
 
 private:
