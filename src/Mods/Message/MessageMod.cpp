@@ -98,4 +98,8 @@ bool MessageMod::instanceOfMod( IMod::ModeType type ) {
     return type == IMod::ModeType::Message;
 }
 
+String MessageMod::currentData() {
+    return String( currentMessageItem->getText() );
+}
+
 // -------------------------------------

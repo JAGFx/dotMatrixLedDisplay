@@ -21,6 +21,7 @@ public:
     enum BLE_ACTIONS {
         SWITCH_MODE  = BT_CODE_SWITCH_MOD,
         CURRENT_MODE = BT_CODE_CURRENT_MOD,
+        CURRENT_DATA = BT_CODE_CURRENT_DATA,
         NONE         = BT_CODE_NONE
     };
     

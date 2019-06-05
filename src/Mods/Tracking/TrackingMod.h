@@ -38,6 +38,8 @@ public:
     
     virtual bool needToRefresh();
     
+    virtual String currentData();
+    
     virtual bool instanceOfMod( ModeType type );
     // ---
     
@@ -55,6 +57,7 @@ protected:
     unsigned long lastMillis               = 0;
     uint8_t       currentIteration         = 0;
     bool          connectedToGPSSatellites = false;
+    String        currentMessage           = String();
     
     void manageIterations( MD_Parola *matrix, String message );
     // ----

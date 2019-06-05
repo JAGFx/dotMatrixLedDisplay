@@ -14,6 +14,19 @@
 #include "Mods/Graph/GraphMod.h"
 #include "Mods/Tracking/TrackingMod.h"
 
+#define HARDWARE_TYPE MD_MAX72XX::ICSTATION_HW
+#define MAX_DEVICES 8
+#define CLK_PIN   14
+#define DATA_PIN  12
+#define CS_PIN    15
+
+#define GPS_ESP_SERIAL 2
+#define GPS_SERIAL_BAUD 0
+
+Orchestrator orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
+
+HardwareSerial gpsSerial( GPS_ESP_SERIAL );
+
 // -------------------------------------------------
 // --- Switch activeMod
 
@@ -89,6 +102,11 @@ void handleBLEAction( esp_spp_cb_event_t event, esp_spp_cb_param_t *param ) {
                         edi.sendData( String( activeMod ) );
                         actionInProcess = false;
                         break;
+    
+                    case ExternalDeviceInteraction::BLE_ACTIONS::CURRENT_DATA:
+                        edi.sendData( orchestrator.getCurrentMod()->currentData() );
+                        actionInProcess = false;
+                        break;
                 }
             }
             
@@ -100,19 +118,6 @@ void handleBLEAction( esp_spp_cb_event_t event, esp_spp_cb_param_t *param ) {
 // -------------------------------------------------
 
 
-
-#define HARDWARE_TYPE MD_MAX72XX::ICSTATION_HW
-#define MAX_DEVICES 8
-#define CLK_PIN   14
-#define DATA_PIN  12
-#define CS_PIN    15
-
-#define GPS_ESP_SERIAL 2
-#define GPS_SERIAL_BAUD 0
-
-Orchestrator orchestrator = Orchestrator( HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES );
-
-HardwareSerial gpsSerial( GPS_ESP_SERIAL );
 
 void resetData() {
     orchestrator.resetMod();

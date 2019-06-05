@@ -27,6 +27,8 @@ public:
     
     virtual bool needToRefresh() = 0;
     
+    virtual String currentData() = 0;
+    
     virtual bool instanceOfMod( ModeType ) = 0;
     
 };

@@ -11,10 +11,11 @@
 
 #define BT_NAME "MyDeviceMatrix"
 
-// Send(1) or received(0)|Mod|ActionID
-// 0x0|00|00
-#define BT_CODE_SWITCH_MOD 0x00100
-#define BT_CODE_CURRENT_MOD 0x10101
+// Mod|ActionID
+// 0x00|00
+#define BT_CODE_SWITCH_MOD 0x0100
+#define BT_CODE_CURRENT_MOD 0x0101
+#define BT_CODE_CURRENT_DATA 0x0102
 #define BT_CODE_NONE 0x0
 
 #endif //DOTMATRIXLEDDISPLAY_SETTINGS_H

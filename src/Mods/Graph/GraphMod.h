@@ -33,6 +33,8 @@ public:
     
     virtual bool needToRefresh();
     
+    virtual String currentData();
+    
     virtual bool instanceOfMod( ModeType type );
     // ---
     

@@ -38,6 +38,8 @@ public:
     virtual void reset( MD_Parola *matrix );
     
     virtual bool instanceOfMod( ModeType type );
+    
+    virtual String currentData();
     // ----
 
 protected:

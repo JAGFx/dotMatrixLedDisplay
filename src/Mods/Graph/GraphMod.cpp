@@ -113,6 +113,10 @@ bool GraphMod::needToRefresh() {
     return !restart;
 }
 
+String GraphMod::currentData() {
+    return String();
+}
+
 bool GraphMod::instanceOfMod( IMod::ModeType type ) {
     return type == IMod::ModeType::Graph;
 }

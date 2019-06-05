@@ -23,8 +23,8 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
         
         //Serial.println( "Plop" );
         //Serial.println(gps.altitude.meters());
-        
-        String message = "###";
+
+//        String message = "###";
         
         // --- Test STR
         /*// - Altitude
@@ -57,36 +57,36 @@ void TrackingMod::updateDisplay( MD_Parola *matrix ) {
                 //Serial.println(">> Alt");
                 //Serial.println(gps.altitude.isValid());
                 //if(gps.altitude.isValid())
-                message = displayAltitude( gps->altitude );
+                currentMessage = displayAltitude( gps->altitude );
                 break;
             case DDate:
-                /*message = String( String( gps->date.year() ) + '-'
+                /*currentMessage = String( String( gps->date.year() ) + '-'
                                   + String( gps->date.month() ) + '-'
                                   + String( gps->date.day() )
                 );*/
-                message = displayDDate();
+                currentMessage = displayDDate();
                 break;
             case TTime:
-                //message = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
-                message = displayTTime();
+                //currentMessage = String( String( gps->time.hour() ) + ':' + String( gps->time.minute() ) );
+                currentMessage = displayTTime();
                 break;
             case Latitude:
-                message = displayLatitude( gps->location );
+                currentMessage = displayLatitude( gps->location );
                 break;
             case Longitude:
-                message = displayLongitude( gps->location );
+                currentMessage = displayLongitude( gps->location );
                 break;
             case Speed:
-                message = displaySpeed( gps->speed );
+                currentMessage = displaySpeed( gps->speed );
                 break;
             case Satellites:
-                message = displaySatellites( gps->satellites );
+                currentMessage = displaySatellites( gps->satellites );
                 break;
         }
-        
-        //Serial.println( message );
     
-        manageIterations( matrix, message );
+        //Serial.println( currentMessage );
+    
+        manageIterations( matrix, currentMessage );
         //delay( 1500 );
     }
     
@@ -110,6 +110,10 @@ bool TrackingMod::needToRefresh() {
     Serial.println("------------");*/
     
     return currentMillis - lastMillis >= REFRESH_DELAY_MS;
+}
+
+String TrackingMod::currentData() {
+    return currentMessage;
 }
 
 bool TrackingMod::instanceOfMod( IMod::ModeType type ) {
