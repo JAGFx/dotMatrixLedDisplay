@@ -7,6 +7,7 @@
 
 #include <MD_Parola.h>
 #include <HardwareSerial.h>
+#include <Engine/Commons.h>
 #include "QueueH.h"
 #include "Engine/Orchestrator.h"
 #include "Engine/ExternalDeviceInteraction.h"
@@ -85,7 +86,11 @@ void handleBLEAction( esp_spp_cb_event_t event, esp_spp_cb_param_t *param ) {
             
             char buf[1024];
             snprintf( buf, ( size_t ) param->data_ind.len, ( char * ) param->data_ind.data );
-            command = ( ExternalDeviceInteraction::BLE_ACTIONS ) strtol( buf, 0, 16 );
+        
+            String cmd     = Str::accessToSplitedValue( buf, '|', 0 );
+            String cmdData = Str::accessToSplitedValue( buf, '|', 1 );
+        
+            command = ( ExternalDeviceInteraction::BLE_ACTIONS ) strtol( cmd.c_str(), 0, 16 );
             
             Serial.println( strtol( buf, 0, 16 ) );
             
@@ -105,6 +110,20 @@ void handleBLEAction( esp_spp_cb_event_t event, esp_spp_cb_param_t *param ) {
     
                     case ExternalDeviceInteraction::BLE_ACTIONS::CURRENT_DATA:
                         edi.sendData( orchestrator.getCurrentMod()->currentData() );
+                        actionInProcess = false;
+                        break;
+    
+                    case ExternalDeviceInteraction::BLE_ACTIONS::MESSAGE_ADD_MSG:
+                        if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::Message ) ) {
+                            auto *messageMod = ( MessageMod * ) orchestrator.getCurrentMod();
+                            messageMod->addInQueuePrior(
+                                    new MessageItem(
+                                            ( char * ) cmdData.c_str(),
+                                            PA_SCROLL_LEFT,
+                                            0 )
+                            );
+                        }
+        
                         actionInProcess = false;
                         break;
                 }

@@ -54,5 +54,13 @@ private:
     static String convertDDPositionToDMS( double currentPosition );
 };
 
+// -----------------------------------------
+// --- String
+
+class Str {
+public:
+    static const String accessToSplitedValue( String data, char separator, int index );
+};
+
 
 #endif //DOTMATRIXLEDDISPLAY_COMMONS_H

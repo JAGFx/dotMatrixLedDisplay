@@ -18,6 +18,11 @@ void MessageMod::addInQueue( MessageItem *textSlide ) {
     queue.push( textSlide );
 }
 
+void MessageMod::addInQueuePrior( MessageItem *textSlide ) {
+    addInQueue( textSlide );
+    messagePriorAvailable = true;
+}
+
 void MessageMod::clearQueue() {
     queue.clear();
 }
@@ -28,7 +33,16 @@ void MessageMod::updateCurrentMessageItem() {
         delete prevTextSlide;
     }
     
-    currentMessageItem = queue.pop();
+    if ( messagePriorAvailable ) {
+        Serial.println( queue.count() );
+        Serial.println( queue.front() );
+        Serial.println( queue.back() );
+        currentMessageItem    = queue.shift();
+        messagePriorAvailable = false;
+        
+    } else {
+        currentMessageItem = queue.pop();
+    }
 }
 
 // -------------------------------------

@@ -14,13 +14,15 @@
 
 class MessageMod : public IMod {
 public:
-
+    
     static const uint8_t MAX_SLIDE_IN_QUEUE = 10;
     
     MessageMod();
     
     // Mod management
     void addInQueue( MessageItem *textSlide );
+    
+    void addInQueuePrior( MessageItem *textSlide );
     
     void clearQueue();
     
@@ -44,9 +46,10 @@ public:
 
 protected:
     // Project management
-    QueueH < MessageItem * > queue               = QueueH < MessageItem * >( MAX_SLIDE_IN_QUEUE );
-    MessageItem              *currentMessageItem = nullptr;
-    MessageItem              *prevTextSlide      = nullptr;
+    QueueH < MessageItem * > queue                 = QueueH < MessageItem * >( MAX_SLIDE_IN_QUEUE );
+    MessageItem              *currentMessageItem   = nullptr;
+    MessageItem              *prevTextSlide        = nullptr;
+    boolean                  messagePriorAvailable = false;
     // ----
 };
 

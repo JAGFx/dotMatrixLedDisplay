@@ -19,10 +19,11 @@ public:
     // Send(1) or received(0)|Mod|ActionID
     // 0x0|00|00
     enum BLE_ACTIONS {
-        SWITCH_MODE  = BT_CODE_SWITCH_MOD,
-        CURRENT_MODE = BT_CODE_CURRENT_MOD,
-        CURRENT_DATA = BT_CODE_CURRENT_DATA,
-        NONE         = BT_CODE_NONE
+        SWITCH_MODE     = BT_CODE_SWITCH_MOD,
+        CURRENT_MODE    = BT_CODE_CURRENT_MOD,
+        CURRENT_DATA    = BT_CODE_CURRENT_DATA,
+        MESSAGE_ADD_MSG = BT_CODE_MESSAGE_ADD_MSG,
+        NONE            = BT_CODE_NONE
     };
     
     void sendData( String data );

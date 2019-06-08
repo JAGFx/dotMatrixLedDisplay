@@ -66,6 +66,8 @@ template < class T >
         
         T pop();
         
+        T shift();
+        
         void clear();
     };
 
@@ -105,6 +107,19 @@ template < class T >
             // Check wrap around
             if ( _front > _maxitems )
                 _front -= ( _maxitems + 1 );
+            return result;
+        }
+    }
+
+template < class T >
+    T QueueH < T >::shift() {
+        if ( _count <= 0 ) return T(); // Returns empty
+        else {
+            T result = _data[ --_back ];
+            --_count;
+            // Check wrap around
+            if ( _back > _maxitems )
+                _back -= ( _maxitems + 1 );
             return result;
         }
     }
