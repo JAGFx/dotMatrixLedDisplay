@@ -74,27 +74,27 @@ void MessageMod::updateDisplay( MD_Parola *matrix ) {
                              currentMessageItem->getEffectIn(),
                              currentMessageItem->getEffectOut() );
     
-        /*if ( currentMessageItem->getEffectIn() == PA_SPRITE ) {
+        if ( currentMessageItem->getEffectIn() == PA_SPRITE ) {
             Serial.println( "SPRIIIIIIIIITE !!!" );
             
             const uint8_t PROGMEM rocket[] = {
-                    0x18, 0x3c, 0x66, 0xc3, 0x99, 0x3c, 0x66, 0xc3, 0x81,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0
             };
             
             matrix->setSpriteData( rocket,
-                                   Chevron::widthFrameByte,
+                                   6,
                                    Chevron::numberOfFrame,
                                    rocket,
                                    Chevron::widthFrameByte,
                                    Chevron::numberOfFrame );
-            
-            *//*matrix->setSpriteData( Chevron::spriteData,
+        
+            /*matrix->setSpriteData( Chevron::spriteData,
                                   Chevron::widthFrameByte,
                                   Chevron::numberOfFrame,
                                   Chevron::spriteData,
                                   Chevron::widthFrameByte,
-                                  Chevron::numberOfFrame );*//*
-        }*/
+                                  Chevron::numberOfFrame );*/
+        }
     
         //Serial.println( "======================" );
     }
