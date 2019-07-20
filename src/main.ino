@@ -146,13 +146,16 @@ void resetData() {
         MessageMod *messageMod = ( MessageMod * ) orchestrator.getCurrentMod();
         
         messageMod->clearQueue();
-        messageMod->addInQueue( new MessageItem( "Norway is here ! <3", PA_SCROLL_LEFT, 0 ) );
-        messageMod->addInQueue( new MessageItem( "\\o/", PA_DISSOLVE, 2000 ) );
-        messageMod->addInQueue( new MessageItem( "\\o/", PA_DISSOLVE, PA_FADE, 2000 ) );
+        messageMod->addInQueue( new MessageItem( "C'est les vacances !", PA_SCROLL_LEFT, 0 ) );
+        messageMod->addInQueue( new MessageItem( "Ready", PA_DISSOLVE, 2000 ) );
+        messageMod->addInQueue( new MessageItem( "Set!", PA_DISSOLVE, 2000 ) );
+        messageMod->addInQueue( new MessageItem( "GO!!", PA_DISSOLVE, PA_FADE, 2000 ) );
         // --- FIXME Sprite do not draw correctly
-        messageMod->addInQueue( new MessageItem( "tchou", PA_SPRITE, 2000, MessageItem::SPRITES::CHEVRON ) );
+//        messageMod->addInQueue( new MessageItem( "tchou", PA_SPRITE, 2000, MessageItem::SPRITES::CHEVRON ) );
         // ---
-        messageMod->addInQueue( new MessageItem( "Hellow", PA_MESH, 2000 ) );
+        messageMod->addInQueue( new MessageItem( "Be careful!", PA_MESH, 5000 ) );
+        messageMod->addInQueue( new MessageItem( "Pensez a vous, gardez vos distances :D", PA_SCROLL_LEFT, 0 ) );
+        messageMod->addInQueue( new MessageItem( "Yeaaaaah!!!!", PA_MESH, 5000 ) );
         
     } else if ( orchestrator.getCurrentMod()->instanceOfMod( IMod::ModeType::Tracking ) ) {
         //Serial.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Graph mode reset queue" );
