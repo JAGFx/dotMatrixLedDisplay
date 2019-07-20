@@ -16,7 +16,7 @@ class TrackingMod : public IMod {
 public:
     
     static const unsigned long REFRESH_DELAY_MS = 1000;
-    static const uint8_t       MAX_ITERATION    = 5;
+    static const uint8_t       MAX_ITERATION    = 10;
     
     enum GPSDisplayMod {
         Altitude,

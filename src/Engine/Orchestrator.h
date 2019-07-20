@@ -18,7 +18,7 @@ class Orchestrator {
 
 public:
     static const uint8_t        DEFAULT_MIN_DISPLAY   = 1;
-    static const uint8_t        DEFAULT_LED_INTENSITY = 1;
+    static const uint8_t        DEFAULT_LED_INTENSITY = 15;
     static const textPosition_t DEFAULT_SCROLL_ALIGN  = PA_CENTER;
     static const uint8_t        DEFAULT_SCROLL_SPEED  = 35;
     
